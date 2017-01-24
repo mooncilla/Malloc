@@ -5,10 +5,11 @@
 ** Login   <gastal_r>
 ** 
 ** Started on  Tue Jan 24 14:19:22 2017 
-** Last update Tue Jan 24 14:23:03 2017 
+** Last update Tue Jan 24 14:52:07 2017 
 */
 
 #include	"unistd.h"
+#include	"utils.h"
 
 int		my_strlen(char *str)
 {
