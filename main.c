@@ -17,9 +17,29 @@
 static    t_free      *freeStruct;
 static    t_malloc    *mallocStruct;
 
+void	check_double_empty()
+{
+  t_free	
+  while (freeStruct && freeStruct->next != NULL)
+    {
+      if (&freeStruct == (&freeStruct + 
+    }
+}
+
 void    my_free(void *ptr)
 {
+  check_double_empty();
+}
 
+int		check_in_free_list(unsigned int size)
+{
+  while (freeStruct)
+    {
+      if (freeStruct->size >= size)
+	return(1);
+      freeStruct = freeStruct->next;
+    }
+  return (0);
 }
 
 void		my_malloc(unsigned int size)
@@ -28,8 +48,17 @@ void		my_malloc(unsigned int size)
   static int   pagerUsedSize = 0;
   // TODO -> check_in_free_list(unsigned int size);
   // si pas de place dans la liste de free -> check si la taille dans le pager est suffisante
-  if ((PAGESIZE - pagerUsedSize) < size)
-    void  *ptr = sbrk(PAGESIZE);
+  if (check_in_free_list(size) == 1)
+    {
+    }
+  else
+    {
+      if ((PAGESIZE - pagerUsedSize) < size)
+	void  *ptr = sbrk(PAGESIZE);
+      else
+	{
+	}
+    }
   /* mallocStruct =  ptr;
   mallocStructSize += sizeof(t_malloc);
   printf("%d\n", mallocStructSize); */
