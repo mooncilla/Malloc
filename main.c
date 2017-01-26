@@ -20,9 +20,11 @@ static    t_malloc    *mallocStruct;
 void	check_double_empty()
 {
   t_free	*tmp;
+  t_free	*tmp2;
 
   tmp = freeStruct;
-  while (freeStruct)
+  tmp2 = freeStruct;
+  while (tmp2)
     {
       freeStruct = tmp;
       while (freeStruct->next != NULL)
@@ -37,6 +39,7 @@ void	check_double_empty()
 	    }
 	  freeStruct = freeStruct->next;
 	}
+      tmp2 = tmp2->next;
     }
 }
 
