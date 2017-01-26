@@ -5,11 +5,17 @@
 ** Login   <gastal_r>
 ** 
 ** Started on  Tue Jan 24 14:19:22 2017 
-** Last update Tue Jan 24 14:52:07 2017 
+** Last update Wed Jan 25 10:30:38 2017 
 */
 
-#include	"unistd.h"
+#include	<unistd.h>
 #include	"utils.h"
+#include	<stdio.h>
+
+void		malloc()
+{
+  printf("Hello world!!!\n");
+}
 
 int		my_strlen(char *str)
 {
