@@ -48,15 +48,19 @@ void    my_free(void *ptr)
   check_double_empty();
 }
 
-int		check_in_free_list(unsigned int size)
+void		*check_in_free_list(unsigned int size)
 {
+  t_free	*tmp; 
   while (freeStruct)
     {
       if (freeStruct->size >= size)
-	return(1);
+	{
+	  tmp = freeStruct
+	  return(tmp);
+	}
       freeStruct = freeStruct->next;
     }
-  return (0);
+  return (NULL);
 }
 
 void		my_malloc(unsigned int size)
