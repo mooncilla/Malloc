@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 15:53:20 2017 Full Name
+** Last update	Fri Jan 27 16:51:30 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -72,7 +72,7 @@ size_t		allow_right(size_t	needed)
   size_t	right;
 
   right = PAGESIZE;
-  while (right < needed)
+  while (right <= needed)
     right += PAGESIZE;
   return(right);
 }

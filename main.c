@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Fri Jan 27 15:52:21 2017 Full Name
+** Last update	Fri Jan 27 16:49:18 2017 Full Name
 */
 
 #include <string.h>
@@ -13,15 +13,15 @@
 
 int main()
 {
-  char *test = malloc(5000);
+  char *test = malloc(4096);
   //printpointer(test);
   test = strcpy(test, "test");
 
-  char *bonsoir = malloc(3000);
+  char *bonsoir = malloc(4096);
   //printpointer(bonsoir);
   bonsoir = strcpy(bonsoir, "bonsoir");
 
-  char *oui = malloc(200000);
+  char *oui = malloc(4096);
   //printpointer(oui);
   oui = strcpy(oui, "oui");
 
