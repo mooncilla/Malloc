@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 17:51:46 2017 Full Name
+** Last update	Fri Jan 27 18:30:25 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -93,9 +93,9 @@ void		free(void *ptr)
     void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
     if (ptr == ptrTmp)
     {
-      my_putstr("ouiiiiiiiiiiiiiiiiiiiii\n");
       tmp->isFree = true;
-      ptrTmp = NULL;
+      char *tmpTest = (void *) tmp  + sizeof(t_malloc) + 1;
+      *tmpTest = 0;
       return;
     }
     tmp = tmp->next;
