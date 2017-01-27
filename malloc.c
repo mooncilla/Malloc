@@ -89,6 +89,16 @@ void		*malloc(size_t size)
       }
 }
 
+size_t		allow_right(size_t	needed)
+{
+  size_t	right;
+
+  right = PAGESIZE;
+  while (right < needed)
+    right += PAGESIZE;
+  return(right);
+}
+
 void		free()
 {
 
