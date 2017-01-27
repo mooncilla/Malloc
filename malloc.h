@@ -21,4 +21,9 @@ typedef struct      s_malloc
   bool              isFree;
 }                   t_malloc;
 
+void		my_strlen(char *);
+void		my_putchar(char);
+void		my_putstr(char *);
+void		printpointer(void *);
+
 #endif /* !MALLOC_H_ */

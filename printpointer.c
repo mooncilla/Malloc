@@ -5,13 +5,34 @@
 ** Login   <gastal_r@epitech.net>
 ** 
 ** Started on  Mon Nov 16 11:00:49 2015 remi gastaldi
-** Last update Mon Feb 22 16:13:49 2016 remi gastaldi
+** Last update Fri Jan 27 11:09:19 2017 Juliani Renaud
 */
 
-#include "my.h"
+#include <unistd.h>
+#include <stdio.h>
+#include "malloc.h"
 
-void	printpointer(va_list ap)
+void	printpointer(void *nbs)
 {
+  size_t   result;
+  size_t   div;
+  size_t   length;
+  size_t   nb;
+  char	   *base;
+
+  nb = (size_t)nbs;
+  base = "0123456789abcdef";
+  result = 0;
+  div = 1;
+  length = 16;
   my_putstr("0x");
-  my_putnbr_base_t(va_arg(ap, size_t), "0123456789abcdef");
+  while ((nb / div) >= length)
+    div = div * length;
+  while (div > 0)
+    {
+      result = (nb / div) % length;
+      my_putchar(base[result]);
+      div = div / length;
+    }
+  my_putchar('\n');
 }
