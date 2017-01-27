@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Fri Jan 27 16:49:18 2017 Full Name
+** Last update	Fri Jan 27 17:44:48 2017 Full Name
 */
 
 #include <string.h>
@@ -13,11 +13,11 @@
 
 int main()
 {
-  char *test = malloc(4096);
+  char *test = malloc(204096);
   //printpointer(test);
   test = strcpy(test, "test");
 
-  char *bonsoir = malloc(4096);
+  char *bonsoir = malloc(10);
   //printpointer(bonsoir);
   bonsoir = strcpy(bonsoir, "bonsoir");
 
@@ -27,6 +27,7 @@ int main()
 
   //printpointer(sbrk(0));
 
+ free(test);
  printf("%s\n%s\n%s\n", test, bonsoir, oui);
 /*  while (mallocStruct)
   {

@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 16:51:30 2017 Full Name
+** Last update	Fri Jan 27 17:51:46 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -14,31 +14,6 @@
 
 static    t_malloc    *mallocStruct = NULL;
 static    size_t      currentPageSize;
-
-void	check_double_empty()
-{
-  /* t_free	;
-  while (freeStruct && freeStruct->next != NULL)
-    {
-      if (&freeStruct == (&freeStruct + )
-    } */
-}
-
-void    my_free(void *ptr)
-{
-  check_double_empty();
-}
-
-int		check_in_free_list(size_t size)
-{
-/*  while (freeStruct)
-    {
-      if (freeStruct->size >= size)
-	return(1);
-      freeStruct = freeStruct->next;
-  } */
-  return (0);
-}
 
 void    *push_back_malloc_list(size_t size)
 {
@@ -109,7 +84,20 @@ void		*malloc(size_t size)
       }
 }
 
-void		free()
+void		free(void *ptr)
 {
+  t_malloc *tmp = mallocStruct;
 
+  while (tmp)
+  {
+    void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
+    if (ptr == ptrTmp)
+    {
+      my_putstr("ouiiiiiiiiiiiiiiiiiiiii\n");
+      tmp->isFree = true;
+      ptrTmp = NULL;
+      return;
+    }
+    tmp = tmp->next;
+  }
 }

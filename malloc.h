@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Fri Jan 27 13:02:19 2017 Full Name
+** Last update	Fri Jan 27 17:44:35 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -26,5 +26,6 @@ void		my_putchar(char);
 void		my_putstr(char *);
 void		printpointer(void *);
 void   *malloc(size_t size);
+void	  free(void *);
 
 #endif /* !MALLOC_H_ */
