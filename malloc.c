@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 18:30:25 2017 Full Name
+** Last update	Fri Jan 27 18:36:29 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -61,9 +61,8 @@ void		*malloc(size_t size)
     pagerUsedSize = allow_right(size);
     currentPageSize = allow_right(size);
   }
-  // TODO -> check_in_free_list(size_t size);
-  // si pas de place dans la liste de free -> check si la taille dans le pager est suffisante
-/*  if (check_in_free_list(size) == 1)
+  //void *ptr
+/*  if (())
     {
     }
   else
@@ -94,8 +93,8 @@ void		free(void *ptr)
     if (ptr == ptrTmp)
     {
       tmp->isFree = true;
-      char *tmpTest = (void *) tmp  + sizeof(t_malloc) + 1;
-      *tmpTest = 0;
+      char *value = ptrTmp;
+      *value = 0;
       return;
     }
     tmp = tmp->next;
