@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 18:36:29 2017 Full Name
+** Last update	Fri Jan 27 19:22:45 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -14,6 +14,23 @@
 
 static    t_malloc    *mallocStruct = NULL;
 static    size_t      currentPageSize;
+
+void    *check_in_free_list(size_t size)
+{
+  t_malloc *tmp = mallocStruct;
+
+  while (tmp)
+  {
+    if (tmp->isFree && tmp->size >= size)
+    {
+      tmp->isFree = false;
+      void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
+      return (ptrTmp);
+    }
+    tmp = tmp->next;
+  }
+  return (NULL);
+}
 
 void    *push_back_malloc_list(size_t size)
 {
@@ -61,26 +78,23 @@ void		*malloc(size_t size)
     pagerUsedSize = allow_right(size);
     currentPageSize = allow_right(size);
   }
-  //void *ptr
-/*  if (())
-    {
-    }
+  void *ptrTestFree;
+  if ((ptrTestFree = check_in_free_list(size)) != NULL)
+    return (ptrTestFree);
+  if ((currentPageSize - pagerUsedSize) < size)
+  {
+    //my_putstr("New page\n");
+    currentPageSize = allow_right(size);
+	  sbrk(allow_right(size));
+    pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
+    return (push_back_malloc_list(size));
+  }
   else
-    { */
-      if ((currentPageSize - pagerUsedSize) < size)
-      {
-        //my_putstr("New page\n");
-        currentPageSize = allow_right(size);
-	      sbrk(allow_right(size));
-        pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
-        return (push_back_malloc_list(size));
-      }
-      else
-      {
-        //my_putstr("Existing page\n");
-        pagerUsedSize += size + sizeof(t_malloc);
-        return (push_back_malloc_list(size));
-      }
+  {
+    //my_putstr("Existing page\n");
+    pagerUsedSize += size + sizeof(t_malloc);
+    return (push_back_malloc_list(size));
+  }
 }
 
 void		free(void *ptr)

@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Fri Jan 27 17:44:35 2017 Full Name
+** Last update	Fri Jan 27 19:05:07 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -17,7 +17,7 @@
 typedef struct      s_malloc
 {
   struct s_malloc   *next;
-  int               size;
+  size_t            size;
   bool              isFree;
 }                   t_malloc;
 
