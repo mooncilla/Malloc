@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 19:22:45 2017 Full Name
+** Last update	Fri Jan 27 19:45:16 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -36,7 +36,7 @@ void    *push_back_malloc_list(size_t size)
 {
     if (mallocStruct == NULL)
     {
-      //my_putstr("Creation de la liste\n");
+      my_putstr("Creation de la liste\n");
       mallocStruct = sbrk(0) - currentPageSize;
       mallocStruct->size = size;
       mallocStruct->next = NULL;
@@ -46,7 +46,7 @@ void    *push_back_malloc_list(size_t size)
     }
     else
     {
-      //my_putstr("Nouveau maillon\n");
+      my_putstr("Nouveau maillon\n");
       t_malloc *tmp = mallocStruct;
       while (tmp->next)
         tmp = tmp->next;
@@ -83,7 +83,7 @@ void		*malloc(size_t size)
     return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < size)
   {
-    //my_putstr("New page\n");
+    my_putstr("New page\n");
     currentPageSize = allow_right(size);
 	  sbrk(allow_right(size));
     pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
@@ -91,8 +91,10 @@ void		*malloc(size_t size)
   }
   else
   {
-    //my_putstr("Existing page\n");
+    my_putstr("Existing page\n");
     pagerUsedSize += size + sizeof(t_malloc);
+    my_putnbr(pagerUsedSize);
+    my_putstr("\n");
     return (push_back_malloc_list(size));
   }
 }
