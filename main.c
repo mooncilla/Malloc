@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Fri Jan 27 09:55:22 2017 Full Name
+** Last update	Fri Jan 27 11:09:03 2017 Full Name
 */
 
 #include	<unistd.h>
@@ -45,9 +45,7 @@ void    *push_back_malloc_list(unsigned int size)
 {
     if (mallocStruct == NULL)
     {
-      //printf("Creation de la liste\n");
       mallocStruct = sbrk(0) - 4096;
-      //printf("ptr = %p\n", mallocStruct);
       mallocStruct->size = size;
       mallocStruct->next = NULL;
       mallocStruct->isFree = false;
@@ -55,18 +53,20 @@ void    *push_back_malloc_list(unsigned int size)
     }
     else
     {
-      void *tmp = mallocStruct;
-      while (mallocStruct->next)
-        mallocStruct = mallocStruct->next;
-    //  //printf("avant= %s\n", mallocStruct + sizeof(t_malloc) + 1);
+      t_malloc *tmp = mallocStruct;
+      while (tmp->next)
+        tmp = tmp->next;
+    //  //printf("avant= %s\n", tmp + sizeof(t_malloc) + 1);
       //printf("Nouveau maillon\n");
-      //printf("%d\n",mallocStruct->size + sizeof(t_malloc) + 1);
-      mallocStruct->next = mallocStruct + mallocStruct->size + sizeof(t_malloc) + 1;
-      mallocStruct->next->size = size;
-      mallocStruct->next->isFree = false;
-      mallocStruct->next->next = NULL;
-      mallocStruct = tmp;
-      return (mallocStruct->next + sizeof(t_malloc) + 1);
+      //printf("%d\n",tmp->size + sizeof(t_malloc) + 1);
+      //printf("%p\n", tmp);
+      tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc) + 1;
+
+      //printf("%p\n", tmp->next);
+      tmp->next->size = size;
+      tmp->next->isFree = false;
+      tmp->next->next = NULL;
+      return (tmp->next + sizeof(t_malloc) + 1);
     }
 }
 
@@ -85,7 +85,7 @@ void		*my_malloc(unsigned int size)
 	       void *ptr = sbrk(PAGESIZE);
          //printf("%p\n", ptr);
          pagerUsedSize = (size + sizeof(t_malloc)) - (PAGESIZE - pagerUsedSize);
-         //printf("New page %d\n", pagerUsedSize);
+    //     printf("New page %d\n", pagerUsedSize);
          return (push_back_malloc_list(size));
       }
       else
@@ -100,17 +100,22 @@ void		*my_malloc(unsigned int size)
 
 int main()
 {
-  /*oid *ptr1 = sbrk(10);
-   printf("bite\n");
-  void *ptr2 = sbrk(0) - 10;
+/*  void *ptrt = sbrk(100);
+  void *ptr1 = ptrt + 9;
+  // printf("bite\n");
+//  void *ptr2 = sbrk(0);
+  printf("%p\n", ptrt);
   printf("%p\n", ptr1);
-  printf("%p\n", ptr2);
-return(0); */
-  char *test = my_malloc(500);
-  test = strcpy(test, "bite");
+  return(0); */
+  char *test = my_malloc(4080);
+  test = strcpy(test, "test");
 
   char *bonsoir = my_malloc(200);
-  bonsoir = strcpy(bonsoir, "b");
+  bonsoir = strcpy(bonsoir, "bonsoir");
+
+  my_putstr("jaimelesbites");
+  char *oui = my_malloc(20);
+  oui = strcpy(bonsoir, "oui");
 
   while (mallocStruct)
   {
