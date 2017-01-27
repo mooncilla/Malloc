@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 14:51:53 2017 Full Name
+** Last update	Fri Jan 27 15:53:20 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -44,16 +44,17 @@ void    *push_back_malloc_list(size_t size)
 {
     if (mallocStruct == NULL)
     {
-      my_putstr("Creation de la liste\n");
+      //my_putstr("Creation de la liste\n");
       mallocStruct = sbrk(0) - currentPageSize;
       mallocStruct->size = size;
       mallocStruct->next = NULL;
       mallocStruct->isFree = false;
-      return (mallocStruct + sizeof(t_malloc) + 1);
+      void *ptr = (void *) mallocStruct + sizeof(t_malloc) + 1;
+      return (ptr);
     }
     else
     {
-      my_putstr("Nouveau maillon\n");
+      //my_putstr("Nouveau maillon\n");
       t_malloc *tmp = mallocStruct;
       while (tmp->next)
         tmp = tmp->next;
@@ -61,7 +62,8 @@ void    *push_back_malloc_list(size_t size)
       tmp->next->size = size;
       tmp->next->isFree = false;
       tmp->next->next = NULL;
-      return (tmp->next + sizeof(t_malloc) + 1);
+      void *ptr = (void *) tmp->next + sizeof(t_malloc) + 1;
+      return (ptr);
     }
 }
 
@@ -93,7 +95,7 @@ void		*malloc(size_t size)
     { */
       if ((currentPageSize - pagerUsedSize) < size)
       {
-        my_putstr("New page\n");
+        //my_putstr("New page\n");
         currentPageSize = allow_right(size);
 	      sbrk(allow_right(size));
         pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
@@ -101,7 +103,7 @@ void		*malloc(size_t size)
       }
       else
       {
-        my_putstr("Existing page\n");
+        //my_putstr("Existing page\n");
         pagerUsedSize += size + sizeof(t_malloc);
         return (push_back_malloc_list(size));
       }
