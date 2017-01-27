@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Jan 27 13:36:51 2017 Full Name
+** Last update	Fri Jan 27 14:51:53 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -13,6 +13,7 @@
 #define   PAGESIZE sysconf(_SC_PAGESIZE)
 
 static    t_malloc    *mallocStruct = NULL;
+static    size_t      currentPageSize;
 
 void	check_double_empty()
 {
@@ -43,8 +44,8 @@ void    *push_back_malloc_list(size_t size)
 {
     if (mallocStruct == NULL)
     {
-      //my_putstr("Creation de la liste\n");
-      mallocStruct = sbrk(0) - 4096;
+      my_putstr("Creation de la liste\n");
+      mallocStruct = sbrk(0) - currentPageSize;
       mallocStruct->size = size;
       mallocStruct->next = NULL;
       mallocStruct->isFree = false;
@@ -52,7 +53,7 @@ void    *push_back_malloc_list(size_t size)
     }
     else
     {
-      //my_putstr("Nouveau maillon\n");
+      my_putstr("Nouveau maillon\n");
       t_malloc *tmp = mallocStruct;
       while (tmp->next)
         tmp = tmp->next;
@@ -64,31 +65,6 @@ void    *push_back_malloc_list(size_t size)
     }
 }
 
-void		*malloc(size_t size)
-{
-  static size_t   pagerUsedSize = 4096;
-  // TODO -> check_in_free_list(size_t size);
-  // si pas de place dans la liste de free -> check si la taille dans le pager est suffisante
-/*  if (check_in_free_list(size) == 1)
-    {
-    }
-  else
-    { */
-      if ((PAGESIZE - pagerUsedSize) < size)
-      {
-        //my_putstr("New page\n");
-	      sbrk(PAGESIZE);
-        pagerUsedSize = (size + sizeof(t_malloc)) - (PAGESIZE - pagerUsedSize);
-        return (push_back_malloc_list(size));
-      }
-      else
-      {
-        //my_putstr("Existing page\n");
-        pagerUsedSize += size + sizeof(t_malloc);
-        return (push_back_malloc_list(size));
-      }
-}
-
 size_t		allow_right(size_t	needed)
 {
   size_t	right;
@@ -97,6 +73,38 @@ size_t		allow_right(size_t	needed)
   while (right < needed)
     right += PAGESIZE;
   return(right);
+}
+
+void		*malloc(size_t size)
+{
+  static size_t   pagerUsedSize;
+
+  if (mallocStruct == NULL)
+  {
+    pagerUsedSize = allow_right(size);
+    currentPageSize = allow_right(size);
+  }
+  // TODO -> check_in_free_list(size_t size);
+  // si pas de place dans la liste de free -> check si la taille dans le pager est suffisante
+/*  if (check_in_free_list(size) == 1)
+    {
+    }
+  else
+    { */
+      if ((currentPageSize - pagerUsedSize) < size)
+      {
+        my_putstr("New page\n");
+        currentPageSize = allow_right(size);
+	      sbrk(allow_right(size));
+        pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
+        return (push_back_malloc_list(size));
+      }
+      else
+      {
+        my_putstr("Existing page\n");
+        pagerUsedSize += size + sizeof(t_malloc);
+        return (push_back_malloc_list(size));
+      }
 }
 
 void		free()
