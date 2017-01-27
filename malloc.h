@@ -5,25 +5,20 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Thu Jan 26 11:59:38 2017 Full Name
+** Last update	Thu Jan 26 18:39:03 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
 #define             MALLOC_H_
 
+#include            <unistd.h>
+#include            <stdbool.h>
+
 typedef struct      s_malloc
 {
-  struct s_malloc   *allocated;
+  struct s_malloc   *next;
   int               size;
-  void	            *next;
+  bool              isFree;
 }                   t_malloc;
-
-typedef struct      s_free
-{
-  struct s_free     *allocated;
-  int               size;
-  void	            *next;
-}                   t_free;
-
 
 #endif /* !MALLOC_H_ */
