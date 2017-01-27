@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Fri Jan 27 11:09:03 2017 Full Name
+** Last update	Fri Jan 27 11:17:19 2017 Full Name
 */
 
 #include	<unistd.h>
@@ -45,6 +45,7 @@ void    *push_back_malloc_list(unsigned int size)
 {
     if (mallocStruct == NULL)
     {
+      my_putstr("Creation de la liste\n");
       mallocStruct = sbrk(0) - 4096;
       mallocStruct->size = size;
       mallocStruct->next = NULL;
@@ -53,16 +54,11 @@ void    *push_back_malloc_list(unsigned int size)
     }
     else
     {
+      my_putstr("Nouveau maillon\n");
       t_malloc *tmp = mallocStruct;
       while (tmp->next)
         tmp = tmp->next;
-    //  //printf("avant= %s\n", tmp + sizeof(t_malloc) + 1);
-      //printf("Nouveau maillon\n");
-      //printf("%d\n",tmp->size + sizeof(t_malloc) + 1);
-      //printf("%p\n", tmp);
       tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc) + 1;
-
-      //printf("%p\n", tmp->next);
       tmp->next->size = size;
       tmp->next->isFree = false;
       tmp->next->next = NULL;
@@ -82,16 +78,15 @@ void		*my_malloc(unsigned int size)
     { */
       if ((PAGESIZE - pagerUsedSize) < size)
       {
+        my_putstr("New page\n");
 	       void *ptr = sbrk(PAGESIZE);
-         //printf("%p\n", ptr);
          pagerUsedSize = (size + sizeof(t_malloc)) - (PAGESIZE - pagerUsedSize);
-    //     printf("New page %d\n", pagerUsedSize);
          return (push_back_malloc_list(size));
       }
       else
       {
+        my_putstr("Existing page\n");
         pagerUsedSize += size + sizeof(t_malloc);
-        //printf("Existing page %d\n", pagerUsedSize);
         return (push_back_malloc_list(size));
       }
 }
@@ -100,20 +95,12 @@ void		*my_malloc(unsigned int size)
 
 int main()
 {
-/*  void *ptrt = sbrk(100);
-  void *ptr1 = ptrt + 9;
-  // printf("bite\n");
-//  void *ptr2 = sbrk(0);
-  printf("%p\n", ptrt);
-  printf("%p\n", ptr1);
-  return(0); */
   char *test = my_malloc(4080);
   test = strcpy(test, "test");
 
   char *bonsoir = my_malloc(200);
   bonsoir = strcpy(bonsoir, "bonsoir");
 
-  my_putstr("jaimelesbites");
   char *oui = my_malloc(20);
   oui = strcpy(bonsoir, "oui");
 
