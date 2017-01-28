@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Sun Jan 29 00:05:21 2017 Full Name
+** Last update	Sun Jan 29 00:22:30 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -61,10 +61,7 @@ void    *push_back_malloc_list(size_t size)
 {
     if (mallocStruct == NULL)
     {
-      //my_putstr("Creation de la liste\n");
       mallocStruct = sbrk(0) - currentPageSize;
-      //printpointer(mallocStruct);
-      //my_putstr("\n");
       mallocStruct->size = size;
       mallocStruct->next = NULL;
       mallocStruct->isFree = false;
@@ -73,13 +70,10 @@ void    *push_back_malloc_list(size_t size)
     }
     else
     {
-      //my_putstr("Nouveau maillon\n");
       t_malloc *tmp = mallocStruct;
       while (tmp->next)
         tmp = tmp->next;
       tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc);
-      //printpointer(tmp->next);
-      //my_putstr("\n");
       tmp->next->size = size;
       tmp->next->isFree = false;
       tmp->next->next = NULL;
@@ -112,34 +106,14 @@ void		*malloc(size_t size)
     return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
-    //my_putstr("New page\n");
-    //my_putstr("Size= ");
-    //my_putnbr(size);
-    //my_putstr("\n");
-    //my_putnbr(pagerUsedSize);
-    //my_putstr("\n");
 	  sbrk(allow_right(size));
     pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
-    //my_putnbr(pagerUsedSize);
-    //my_putstr("\n");
     currentPageSize = allow_right(size);
-    //my_putnbr(currentPageSize);
-    //my_putstr("\n");
     return (push_back_malloc_list(size));
   }
   else
   {
-    //my_putstr("Existing page\n");
-    //my_putstr("Size= ");
-    //my_putnbr(size);
-    //my_putstr("\n");
-    //my_putnbr(pagerUsedSize);
-    //my_putstr("\n");
     pagerUsedSize += size + sizeof(t_malloc);
-    //my_putnbr(pagerUsedSize);
-    //my_putstr("\n");
-    //my_putnbr(currentPageSize);
-    //my_putstr("\n");
     return (push_back_malloc_list(size));
   }
 }
