@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Sat Jan 28 21:17:03 2017 Full Name
+** Last update	Sun Jan 29 00:05:21 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -27,7 +27,7 @@ void		show_alloc_mem()
   {
     if (!tmp->isFree)
     {
-      void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
+      void *ptrTmp = (void *) tmp  + sizeof(t_malloc);
       printpointer(ptrTmp);
       my_putstr(" - ");
       printpointer(ptrTmp + tmp->size);
@@ -49,7 +49,7 @@ void    *check_in_free_list(size_t size)
     if (tmp->isFree && tmp->size >= size)
     {
       tmp->isFree = false;
-      void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
+      void *ptrTmp = (void *) tmp  + sizeof(t_malloc);
       return (ptrTmp);
     }
     tmp = tmp->next;
@@ -177,7 +177,10 @@ void    *realloc(void *ptr, size_t size)
     free(ptr);
     return (NULL);
   }
-  ptrStruct =   ptr - sizeof(t_malloc);
+  tmp = NULL;
+  if ((tmp = check_in_free_list(size)) != NULL)
+    return (tmp);
+  ptrStruct = ptr - sizeof(t_malloc);
   tmp = malloc(size);
   if (ptrStruct->size < size)
     tmp = memcpy(tmp, ptr, ptrStruct->size);

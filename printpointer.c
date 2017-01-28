@@ -5,7 +5,7 @@
 ** Login   <gastal_r@epitech.net>
 **
 ** Started on  Mon Nov 16 11:00:49 2015 remi gastaldi
-** Last update	Sat Jan 28 15:47:47 2017 Full Name
+** Last update	Sat Jan 28 22:30:25 2017 Full Name
 */
 
 #include <unistd.h>
@@ -21,7 +21,7 @@ void	printpointer(void *nbs)
   char	   *base;
 
   nb = (size_t)nbs;
-  base = "0123456789abcdef";
+  base = "0123456789ABCDEF";
   result = 0;
   div = 1;
   length = 16;
