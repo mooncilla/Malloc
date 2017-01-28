@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Sat Jan 28 13:59:26 2017 Full Name
+** Last update	Sat Jan 28 17:22:28 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -15,10 +15,36 @@
 static    t_malloc    *mallocStruct = NULL;
 static    size_t      currentPageSize;
 
+void		show_alloc_mem()
+{
+  t_malloc	*tmp;
+
+  tmp = mallocStruct;
+  my_putstr("break : ");
+  printpointer(sbrk(0));
+  my_putstr("\n");
+  while (tmp)
+  {
+    if (!tmp->isFree)
+    {
+      void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
+      printpointer(ptrTmp);
+      my_putstr(" - ");
+      printpointer(ptrTmp + tmp->size);
+      my_putstr(" : ");
+      int size =  ((ptrTmp + tmp->size) - ptrTmp);
+      my_putnbr(size);
+      my_putstr(" bytes\n");
+    }
+    tmp = tmp->next;
+  }
+}
+
 void    *check_in_free_list(size_t size)
 {
-  t_malloc *tmp = mallocStruct;
+  t_malloc *tmp;
 
+  tmp = mallocStruct;
   while (tmp)
   {
     if (tmp->isFree && tmp->size >= size)
@@ -36,27 +62,29 @@ void    *push_back_malloc_list(size_t size)
 {
     if (mallocStruct == NULL)
     {
-      my_putstr("Creation de la liste\n");
+      //my_putstr("Creation de la liste\n");
       mallocStruct = sbrk(0) - currentPageSize;
-      printpointer(mallocStruct);
+      //printpointer(mallocStruct);
+      //my_putstr("\n");
       mallocStruct->size = size;
       mallocStruct->next = NULL;
       mallocStruct->isFree = false;
-      void *ptr = (void *) mallocStruct + sizeof(t_malloc) + 1;
+      void *ptr = (void *) mallocStruct + sizeof(t_malloc);
       return (ptr);
     }
     else
     {
-      my_putstr("Nouveau maillon\n");
+      //my_putstr("Nouveau maillon\n");
       t_malloc *tmp = mallocStruct;
       while (tmp->next)
         tmp = tmp->next;
-      tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc) + 1;
-      printpointer(tmp->next);
+      tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc);
+      //printpointer(tmp->next);
+      //my_putstr("\n");
       tmp->next->size = size;
       tmp->next->isFree = false;
       tmp->next->next = NULL;
-      void *ptr = (void *) tmp->next + sizeof(t_malloc) + 1;
+      void *ptr = (void *) tmp->next + sizeof(t_malloc);
       return (ptr);
     }
 }
@@ -85,37 +113,46 @@ void		*malloc(size_t size)
     return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
-    my_putstr("New page\n");
-    my_putstr("Size= ");
-    my_putnbr(size);
-    my_putnbr(pagerUsedSize);
+    //my_putstr("New page\n");
+    //my_putstr("Size= ");
+    //my_putnbr(size);
+    //my_putstr("\n");
+    //my_putnbr(pagerUsedSize);
+    //my_putstr("\n");
 	  sbrk(allow_right(size));
     pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
-    my_putnbr(pagerUsedSize);
+    //my_putnbr(pagerUsedSize);
+    //my_putstr("\n");
     currentPageSize = allow_right(size);
-    my_putnbr(currentPageSize);
+    //my_putnbr(currentPageSize);
+    //my_putstr("\n");
     return (push_back_malloc_list(size));
   }
   else
   {
-    my_putstr("Existing page\n");
-    my_putstr("Size= ");
-    my_putnbr(size);
-    my_putnbr(pagerUsedSize);
+    //my_putstr("Existing page\n");
+    //my_putstr("Size= ");
+    //my_putnbr(size);
+    //my_putstr("\n");
+    //my_putnbr(pagerUsedSize);
+    //my_putstr("\n");
     pagerUsedSize += size + sizeof(t_malloc);
-    my_putnbr(pagerUsedSize);
-    my_putnbr(currentPageSize);
+    //my_putnbr(pagerUsedSize);
+    //my_putstr("\n");
+    //my_putnbr(currentPageSize);
+    //my_putstr("\n");
     return (push_back_malloc_list(size));
   }
 }
 
 void		free(void *ptr)
 {
-  t_malloc *tmp = mallocStruct;
+  t_malloc *tmp;
 
+  tmp = mallocStruct;
   while (tmp)
   {
-    void *ptrTmp = (void *) tmp  + sizeof(t_malloc) + 1;
+    void *ptrTmp = (void *) tmp  + sizeof(t_malloc);
     if (ptr == ptrTmp)
     {
       tmp->isFree = true;

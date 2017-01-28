@@ -1,11 +1,11 @@
 /*
 ** printpointer.c for printpointer in /home/gastal_r/rendu/PSU_2015_my_printf
-** 
+**
 ** Made by remi gastaldi
 ** Login   <gastal_r@epitech.net>
-** 
+**
 ** Started on  Mon Nov 16 11:00:49 2015 remi gastaldi
-** Last update Fri Jan 27 11:09:19 2017 Juliani Renaud
+** Last update	Sat Jan 28 15:47:47 2017 Full Name
 */
 
 #include <unistd.h>
@@ -34,5 +34,4 @@ void	printpointer(void *nbs)
       my_putchar(base[result]);
       div = div / length;
     }
-  my_putchar('\n');
 }

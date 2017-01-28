@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Sat Jan 28 14:55:09 2017 Full Name
+** Last update	Sat Jan 28 17:20:06 2017 Full Name
 */
 
 #include <string.h>
@@ -23,26 +23,25 @@ int main()
   char *oui = malloc(4096);
   oui = strcpy(oui, "oui");
 
-  for (int i = 0; i < 2000; ++i)
+/*  for (int i = 0; i < 200; ++i)
   {
-    char *test = malloc(400);
+    char *test = malloc(89);
     test = strcpy(test, "test");
     my_putstr("\n");
 
-    char *bonsoir = malloc(1000);
+    char *bonsoir = malloc(43);
     bonsoir = strcpy(bonsoir, "bonsoir");
     my_putstr("\n");
 
-    char *oui = malloc(800);
+    char *oui = malloc(16);
     oui = strcpy(oui, "oui");
+    my_putstr("\nloop : ");
+    my_putnbr(i + 1);
     my_putstr("\n");
-
-  }
+    show_alloc_mem();
+  } */
 
 //  printf("%s\n%s\n%s\n", test, bonsoir, oui);
-  free(test);
-  free(bonsoir);
-  free(oui);
 /* printpointer(test);
  printpointer(bonsoir); */
 

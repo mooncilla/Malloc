@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Fri Jan 27 19:05:07 2017 Full Name
+** Last update	Sat Jan 28 15:38:13 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -13,6 +13,7 @@
 
 #include            <unistd.h>
 #include            <stdbool.h>
+#include <string.h>
 
 typedef struct      s_malloc
 {
@@ -27,5 +28,6 @@ void		my_putstr(char *);
 void		printpointer(void *);
 void   *malloc(size_t size);
 void	  free(void *);
+void		show_alloc_mem();
 
 #endif /* !MALLOC_H_ */
