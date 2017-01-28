@@ -5,13 +5,13 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:19:22 2017
-** Last update	Fri Jan 27 19:44:37 2017 Full Name
+** Last update	Sat Jan 28 11:35:06 2017 Full Name
 */
 
 #include	<unistd.h>
 #include	"utils.h"
 #include	<stdio.h>
-
+#include <string.h>
 int     my_putnbr(int nb)
 {
   int   i;
@@ -31,6 +31,7 @@ int     my_putnbr(int nb)
       my_putchar(x + 48);
       i = i / 10;
     }
+    my_putchar('\n');
   return (0);
 }
 
