@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Sat Jan 28 22:44:06 2017 Full Name
+** Last update	Mon Jan 30 15:31:37 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -31,5 +31,6 @@ void    *realloc(void *ptr, size_t size);
 void	  free(void *);
 void		show_alloc_mem();
 int     my_putnbr(int nb);
+void   *calloc(size_t nmemb, size_t size);
 
 #endif /* !MALLOC_H_ */
