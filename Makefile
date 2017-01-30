@@ -18,7 +18,9 @@ LFLAGS		=				-shared
 
 NAME			=				libmy_malloc.so
 
-SRCS			=				malloc.c
+SRCS			=				malloc.c \
+									utils.c	\
+									printpointer.c
 
 OBJS			=				$(SRCS:.c=.o)
 

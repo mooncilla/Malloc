@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Sun Jan 29 00:22:30 2017 Full Name
+** Last update	Mon Jan 30 11:17:40 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -78,6 +78,7 @@ void    *push_back_malloc_list(size_t size)
       tmp->next->isFree = false;
       tmp->next->next = NULL;
       void *ptr = (void *) tmp->next + sizeof(t_malloc);
+      show_alloc_mem();
       return (ptr);
     }
 }
@@ -96,14 +97,17 @@ void		*malloc(size_t size)
 {
   static size_t   pagerUsedSize;
 
+  my_putstr("malloc : ");
+  my_putnbr(size);
+  my_putstr("\n");
   if (mallocStruct == NULL)
   {
     pagerUsedSize = allow_right(size);
     currentPageSize = allow_right(size);
   }
   void *ptrTestFree;
-  if ((ptrTestFree = check_in_free_list(size)) != NULL)
-    return (ptrTestFree);
+  //if ((ptrTestFree = check_in_free_list(size)) != NULL)
+    //return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
 	  sbrk(allow_right(size));
@@ -122,6 +126,11 @@ void		free(void *ptr)
 {
   t_malloc *tmp;
 
+  if (ptr == NULL)
+    return;
+  my_putstr("free : ");
+  printpointer(ptr);
+  my_putstr("\n");
   tmp = mallocStruct;
   void *ptrTmp;
   while (tmp)
@@ -130,6 +139,8 @@ void		free(void *ptr)
     if (ptr == ptrTmp)
     {
       tmp->isFree = true;
+      my_putnbr(tmp->size);
+      my_putstr("\n");
       memset(ptrTmp, 0, tmp->size);
     /*  char *value = ptrTmp;
       *value = 0; */
@@ -144,6 +155,9 @@ void    *realloc(void *ptr, size_t size)
   void      *tmp;
   t_malloc  *ptrStruct;
 
+  my_putstr("realloc : ");
+  my_putnbr(size);
+  my_putstr("\n");
   if (ptr == NULL)
     return (malloc(size));
   if (size == 0)
@@ -152,8 +166,8 @@ void    *realloc(void *ptr, size_t size)
     return (NULL);
   }
   tmp = NULL;
-  if ((tmp = check_in_free_list(size)) != NULL)
-    return (tmp);
+  //if ((tmp = check_in_free_list(size)) != NULL)
+    //return (tmp);
   ptrStruct = ptr - sizeof(t_malloc);
   tmp = malloc(size);
   if (ptrStruct->size < size)
