@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Tue Jan 31 15:33:49 2017 Full Name
+** Last update	Tue Jan 31 19:46:37 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -104,7 +104,7 @@ size_t		allow_right(size_t	needed)
 {
   size_t	right;
 
-  right = PAGESIZE * 2;
+  right = PAGESIZE;
   while (right <= (needed + sizeof(t_malloc)))
     right += PAGESIZE;
   return(right);
@@ -159,14 +159,9 @@ void    add_to_free_list(t_free *ptr)
   }
   else
   {
-    my_putstr("AVANT \n");
-    printpointer((void *) freeStruct->end + freeStruct->size + sizeof(t_malloc));
-    my_putstr("    ");
-    printpointer((void *) ptr);
-    my_putstr(" \n");
-    if ((void *) freeStruct->end + freeStruct->size + sizeof(t_malloc) == (void *) ptr)
+    if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
     {
-      my_putstr("OUIIIII \n");
+      my_putstr("OUIIIIIIIIIIIIIIIIIIIIII \n");
       freeStruct->end->size += ptr->size + sizeof(t_malloc);
     }
     else
@@ -177,11 +172,6 @@ void    add_to_free_list(t_free *ptr)
       freeStruct->end->size = ptr->size;
       freeStruct->end->next = NULL;
     }
-/*    freeStruct->end->next = ptr;
-    freeStruct->end->next->prev = freeStruct->end;
-    freeStruct->end = ptr;
-    freeStruct->end->size = ptr->size;
-    freeStruct->end->next = NULL; */
   }
 }
 
@@ -196,7 +186,10 @@ void		free(void *ptr)
   my_putstr("\n");
   tmp = ptr - sizeof(t_malloc);
   if (tmp->prev)
-    tmp->prev->next = tmp->next;
+  {
+      (tmp->next != NULL ? tmp->next->prev = tmp->prev : 0);
+      tmp->prev->next = tmp->next;
+  }
   else if (mallocStruct->next == NULL)
     mallocStruct = NULL;
   else
