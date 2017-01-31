@@ -5,22 +5,30 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Mon Jan 30 15:31:37 2017 Full Name
+** Last update	Mon Jan 30 22:43:46 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
 #define             MALLOC_H_
 
 #include            <unistd.h>
-#include            <stdbool.h>
 #include <string.h>
 
 typedef struct      s_malloc
 {
   struct s_malloc   *next;
+  struct s_malloc   *prev;
+  struct s_malloc   *end;
   size_t            size;
-  bool              isFree;
 }                   t_malloc;
+
+typedef struct      s_free
+{
+  struct s_free     *next;
+  struct s_free     *prev;
+  struct s_free     *end;
+  size_t            size;
+}                   t_free;
 
 void		my_strlen(char *);
 void		my_putchar(char);
@@ -32,5 +40,5 @@ void	  free(void *);
 void		show_alloc_mem();
 int     my_putnbr(int nb);
 void   *calloc(size_t nmemb, size_t size);
-
+void   show_free_list();
 #endif /* !MALLOC_H_ */

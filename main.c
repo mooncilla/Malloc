@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Mon Jan 30 14:18:11 2017 Full Name
+** Last update	Tue Jan 31 00:00:39 2017 Full Name
 */
 
 #include <string.h>
@@ -18,24 +18,30 @@ int main()
   char *bonsoir;
   char *oui;
 
-for (int i = 0; i < 1000; ++i)
+for (int i = 0; i < 2; ++i)
   {
-   test = malloc(5);
+   test = malloc(i + 10);
     test = strcpy(test, "test");
 
-    bonsoir = malloc(i * 3 + 1);
+    bonsoir = malloc((i + 1) * 3);
     bonsoir = strcpy(bonsoir, "bonsoir");
 //    my_putstr("\n");
 
-    oui = malloc(i * 8 + 1);
+    oui = malloc((i + 1 ) * 8);
     oui = strcpy(oui, "oui");
-    oui = realloc(oui, i * 9 + 1);
+    //oui = realloc(oui, (i + 1) * 10);
 
+    free(test);
+    free(bonsoir);
+    free(oui);
     my_putnbr(i + 1);
     my_putstr("\n");
+    show_alloc_mem();
+
   }
 
   show_alloc_mem();
+  show_free_list();
 
 
   my_putstr(test);

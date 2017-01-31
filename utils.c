@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:19:22 2017
-** Last update	Sat Jan 28 15:47:30 2017 Full Name
+** Last update	Tue Jan 31 00:18:47 2017 Full Name
 */
 
 #include	<unistd.h>
@@ -45,10 +45,10 @@ int		my_strlen(char *str)
 
 void		my_putchar(char c)
 {
-  write(1, &c, 1);
+  write(2, &c, 1);
 }
 
 void		my_putstr(char *str)
 {
-  write (1, str, my_strlen(str));
+  write (2, str, my_strlen(str));
 }
