@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Wed Feb 01 13:52:23 2017 Full Name
+** Last update	Wed Feb 01 14:34:28 2017 Full Name
 */
 
 #include <string.h>
@@ -32,17 +32,15 @@ for (int i = 0; i < 2; ++i)
     //oui = realloc(oui, (i + 1) * 10);
 
     show_alloc_mem();
-    free(test);
+    //free(test);
     //free(bonsoir);
-    //free(oui);
+    free(oui);
     show_alloc_mem();
     show_free_list();
     my_putnbr(i + 1);
     my_putstr("\n");
 
   }
-
-  show_alloc_mem();
 
 
   my_putstr(test);

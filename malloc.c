@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Wed Feb 01 13:45:10 2017 Full Name
+** Last update	Wed Feb 01 14:51:46 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -67,15 +67,15 @@ void    *check_in_free_list(size_t size)
     if (tmp->size > size + sizeof(t_free))
     {
       my_putstr("REUTILISATION \n");
-      t_free *tmpPtr;
-      tmpPtr = tmp;
+      t_free *tmpToFree;
+      tmpToFree = tmp;
       size_t sizeTmp = tmp->size;
 
-        tmpPtr->size = size;
-        if (tmpPtr->prev)
+        tmpToFree->size = size;
+        if (tmpToFree->prev)
         {
-            (tmpPtr->next != NULL ? tmpPtr->next->prev = tmpPtr->prev : 0);
-            tmpPtr->prev->next = tmp->next;
+            (tmpToFree->next != NULL ? tmpToFree->next->prev = tmpToFree->prev : 0);
+            tmpToFree->prev->next = tmp->next;
         }
         else if (freeStruct->next == NULL)
           freeStruct = NULL;
@@ -95,20 +95,25 @@ void    *check_in_free_list(size_t size)
       if (freeStruct)
         freeStruct->prev = tmp;
       freeStruct = tmp;
+      if (freeStruct->next)
+        freeStruct->end = freeStruct->next->end;
+      else
+        freeStruct->end = freeStruct;
 
       if (mallocStruct)
       {
-        mallocStruct->end->next = (t_malloc *) tmpPtr;
+        mallocStruct->end->next = (t_malloc *) tmpToFree;
         mallocStruct->end->next->prev = mallocStruct->end;
         mallocStruct->end = mallocStruct->end->next;
       }
       else
       {
-        mallocStruct = (t_malloc *) tmpPtr;
+        mallocStruct = (t_malloc *) tmpToFree;
+        mallocStruct->end = mallocStruct;
         mallocStruct->next = NULL;
         mallocStruct->prev = NULL;
       }
-      return (tmpPtr + sizeof(t_malloc));
+      return (tmpToFree + sizeof(t_malloc));
     }
     tmp = tmp->next;
   }
@@ -192,6 +197,7 @@ void		*malloc(size_t size)
 
 void    add_to_free_list(t_free *ptr)
 {
+
   if (freeStruct == NULL)
   {
     freeStruct = ptr;
