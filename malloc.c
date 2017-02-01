@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Wed Feb 01 14:51:46 2017 Full Name
+** Last update	Wed Feb 01 21:46:15 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -64,36 +64,40 @@ void    *check_in_free_list(size_t size)
   tmp = freeStruct;
   while (tmp)
   {
+    my_putstr("=======================");
+    printpointer(tmp);
+    my_putstr(" - ");
+    my_putnbr(tmp->size);
+    my_putstr("=======================\n");
     if (tmp->size > size + sizeof(t_free))
     {
+      return (NULL);
       my_putstr("REUTILISATION \n");
-      t_free *tmpToFree;
-      tmpToFree = tmp;
+      t_free *tmpToMalloc;
+      tmpToMalloc = tmp;
       size_t sizeTmp = tmp->size;
 
-        tmpToFree->size = size;
-        if (tmpToFree->prev)
-        {
-            (tmpToFree->next != NULL ? tmpToFree->next->prev = tmpToFree->prev : 0);
-            tmpToFree->prev->next = tmp->next;
-        }
-        else if (freeStruct->next == NULL)
-          freeStruct = NULL;
-        else
-        {
-          freeStruct = freeStruct->next;
-          freeStruct->prev = NULL;
-          if (freeStruct->end == NULL)
-            freeStruct->end = freeStruct;
-        }
+      tmpToMalloc->size = size;
+      if (tmpToMalloc->prev)
+      {
+        (tmpToMalloc->next != NULL ? tmpToMalloc->next->prev = tmpToMalloc->prev : 0);
+        tmpToMalloc->prev->next = tmpToMalloc->next;
+      }
+      else if (freeStruct->next == NULL)
+        freeStruct = NULL;
+      else
+      {
+        freeStruct = freeStruct->next;
+        freeStruct->prev = NULL;
+        freeStruct->end = freeStruct;
+      }
 
       tmp = (void *) tmp + size + sizeof(t_free);
       tmp->size = sizeTmp - (size + sizeof(t_free));
       tmp->next = freeStruct;
       tmp->prev = NULL;
-
-      if (freeStruct)
-        freeStruct->prev = tmp;
+      if (tmp->next)
+        tmp->next->prev = tmp;
       freeStruct = tmp;
       if (freeStruct->next)
         freeStruct->end = freeStruct->next->end;
@@ -102,18 +106,19 @@ void    *check_in_free_list(size_t size)
 
       if (mallocStruct)
       {
-        mallocStruct->end->next = (t_malloc *) tmpToFree;
+        mallocStruct->end->next = (t_malloc *) tmpToMalloc;
         mallocStruct->end->next->prev = mallocStruct->end;
         mallocStruct->end = mallocStruct->end->next;
+        mallocStruct->end->next = NULL;
       }
       else
       {
-        mallocStruct = (t_malloc *) tmpToFree;
+        mallocStruct = (t_malloc *) tmpToMalloc;
         mallocStruct->end = mallocStruct;
         mallocStruct->next = NULL;
         mallocStruct->prev = NULL;
       }
-      return (tmpToFree + sizeof(t_malloc));
+      return (tmpToMalloc + sizeof(t_malloc));
     }
     tmp = tmp->next;
   }
@@ -191,6 +196,9 @@ void		*malloc(size_t size)
   else
   {
     pagerUsedSize += size + sizeof(t_malloc);
+    my_putstr("BEFORE RETURN \n");
+    //show_alloc_mem();
+    show_free_list();
     return (push_back_malloc_list(size));
   }
 }
@@ -244,8 +252,7 @@ void		free(void *ptr)
   {
     mallocStruct = mallocStruct->next;
     mallocStruct->prev = NULL;
-    if (mallocStruct->end == NULL)
-      mallocStruct->end = mallocStruct;
+    mallocStruct->end = mallocStruct;
   }
   memset(ptr, 0, tmp->size);
   add_to_free_list((t_free *) tmp);
