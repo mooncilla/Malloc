@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Tue Jan 31 19:46:37 2017 Full Name
+** Last update	Wed Feb 01 13:45:10 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -59,15 +59,56 @@ void		show_alloc_mem()
 
 void    *check_in_free_list(size_t size)
 {
-  t_free *tmp;
+  t_free  *tmp;
 
   tmp = freeStruct;
   while (tmp)
   {
-    if (tmp->size >= size)
+    if (tmp->size > size + sizeof(t_free))
     {
-      void *ptrTmp = (void *) tmp  + sizeof(t_malloc);
-      return (ptrTmp);
+      my_putstr("REUTILISATION \n");
+      t_free *tmpPtr;
+      tmpPtr = tmp;
+      size_t sizeTmp = tmp->size;
+
+        tmpPtr->size = size;
+        if (tmpPtr->prev)
+        {
+            (tmpPtr->next != NULL ? tmpPtr->next->prev = tmpPtr->prev : 0);
+            tmpPtr->prev->next = tmp->next;
+        }
+        else if (freeStruct->next == NULL)
+          freeStruct = NULL;
+        else
+        {
+          freeStruct = freeStruct->next;
+          freeStruct->prev = NULL;
+          if (freeStruct->end == NULL)
+            freeStruct->end = freeStruct;
+        }
+
+      tmp = (void *) tmp + size + sizeof(t_free);
+      tmp->size = sizeTmp - (size + sizeof(t_free));
+      tmp->next = freeStruct;
+      tmp->prev = NULL;
+
+      if (freeStruct)
+        freeStruct->prev = tmp;
+      freeStruct = tmp;
+
+      if (mallocStruct)
+      {
+        mallocStruct->end->next = (t_malloc *) tmpPtr;
+        mallocStruct->end->next->prev = mallocStruct->end;
+        mallocStruct->end = mallocStruct->end->next;
+      }
+      else
+      {
+        mallocStruct = (t_malloc *) tmpPtr;
+        mallocStruct->next = NULL;
+        mallocStruct->prev = NULL;
+      }
+      return (tmpPtr + sizeof(t_malloc));
     }
     tmp = tmp->next;
   }
@@ -132,8 +173,9 @@ void		*malloc(size_t size)
     pagerUsedSize = allow_right(size);
     currentPageSize = allow_right(size);
   }
-//  if ((ptrTestFree = check_in_free_list(size)) != NULL)
-  //  return (ptrTestFree);
+  void * ptrTestFree;
+  if ((ptrTestFree = check_in_free_list(size)) != NULL)
+    return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
 	  sbrk(allow_right(size));
