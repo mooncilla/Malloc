@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Thu Feb 02 03:50:17 2017 Full Name
+** Last update	Thu Feb 02 13:03:09 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -71,6 +71,8 @@ void    *check_in_free_list(size_t size)
     my_putstr("=======================\n"); */
     if (tmp->size >= size /* + sizeof(t_free)*/)
     {
+      show_free_list();
+      show_alloc_mem();
       my_putstr("REUTILISATION \n");
 
       t_free *tmpToMalloc = tmp;
@@ -112,6 +114,9 @@ void    *check_in_free_list(size_t size)
             if (ptrNextMalloc->prev == NULL)
             {
               my_putstr("=================\n");
+              printpointer(ptrNextMalloc);
+              my_putstr("   --   ");
+              printpointer(tmpToMalloc);
               ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
               mallocStruct = (t_malloc *) tmpToMalloc;
               mallocStruct->next = ptrNextMalloc;
@@ -197,7 +202,10 @@ void    *push_back_malloc_list(size_t size)
 {
     if (mallocStruct == NULL)
     {
-      mallocStruct = sbrk(0) - currentPageSize;
+      if (freeStruct)
+        mallocStruct = (void *) freeStruct->end + freeStruct->end->size + sizeof(t_free);
+      else
+        mallocStruct = sbrk(0) - currentPageSize;
       mallocStruct->size = size;
       mallocStruct->end = mallocStruct;
       mallocStruct->next = NULL;

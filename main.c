@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Thu Feb 02 03:50:05 2017 Full Name
+** Last update	Thu Feb 02 11:33:56 2017 Full Name
 */
 
 #include <string.h>
@@ -21,13 +21,13 @@ int main()
 for (int i = 0; i < 3; ++i)
   {
    test = malloc(100);
-   test = strcpy(test, "test");
+   test = memset(test, 't', 100);
    my_putstr(" Test adress :  ");
    printpointer(test - sizeof(t_malloc));
    my_putstr("\n");
 
     bonsoir = malloc(500);
-    bonsoir = strcpy(bonsoir, "bonsoir");
+    bonsoir = memset(bonsoir, 'b', 500);
     my_putstr(" Bonsoir adress :  ");
     printpointer(bonsoir - sizeof(t_malloc));
     my_putstr("\n");
@@ -37,7 +37,7 @@ for (int i = 0; i < 3; ++i)
 //show_free_list();
 //show_alloc_mem();
     oui = malloc(1000);
-    oui = strcpy(oui, "oui");
+    oui = memset(oui, 'o', 1000);
     my_putstr(" Oui adress :  ");
     printpointer(oui - sizeof(t_malloc));
     my_putstr("\n");
