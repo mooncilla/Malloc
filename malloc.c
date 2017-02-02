@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Thu Feb 02 16:20:58 2017 Full Name
+** Last update	Thu Feb 02 17:12:45 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -82,8 +82,8 @@ void    *check_in_free_list(size_t size)
     my_putstr("=======================\n"); */
     if (tmp->size >= size /* + sizeof(t_free)*/)
     {
-      show_free_list();
-      show_alloc_mem();
+  //    show_free_list();
+    //  show_alloc_mem();
       my_putstr("REUTILISATION \n");
 
       t_free *tmpToMalloc = tmp;
@@ -97,17 +97,19 @@ void    *check_in_free_list(size_t size)
         }
         else
         {
-          my_putstr("BITTTTTTTTTTTTTTTTTTTTTTEEEE : ");
+        /*  my_putstr("BITTTTTTTTTTTTTTTTTTTTTTEEEE : \n");
           printpointer(tmpToMalloc);
           my_putstr(" --  ");
           printpointer(tmpToMalloc->next);
-          my_putstr(" \n");
+          my_putstr(" \n"); */
             tmpToMalloc->next->prev = tmpToMalloc->prev;
             tmpToMalloc->prev->next = tmpToMalloc->next;
         }
       }
       else if (freeStruct->next == NULL)
+      {
         freeStruct = NULL;
+      }
       else
       {
         freeStruct->next->end = freeStruct->end;
@@ -134,11 +136,6 @@ void    *check_in_free_list(size_t size)
             //ptrNextMalloc = (void *) tmpToMalloc + tmpToMalloc->size + sizeof(t_free);
             if (ptrNextMalloc->prev == NULL)
             {
-              my_putstr("BITTTTTTTTTTTTTTTTTTTTTTEEEE : \n");
-              printpointer(ptrNextMalloc);
-              my_putstr("  -  ");
-              printpointer(ptrNextMalloc->next);
-              my_putstr(" \n");
               ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
               mallocStruct = (t_malloc *) tmpToMalloc;
               mallocStruct->next = ptrNextMalloc;
@@ -146,13 +143,18 @@ void    *check_in_free_list(size_t size)
             }
             else
             {
+              my_putstr("BITTTTTTTTTTTTTTTTTTTTTTEEEE : \n");
+              printpointer(ptrNextMalloc);
+              my_putstr("  -  ");
+              printpointer(ptrNextMalloc->prev);
+              my_putstr(" \n");
               ptrNextMalloc->prev->next = (t_malloc *) tmpToMalloc;
-              if (ptrNextMalloc->next)
-                ptrNextMalloc->next->prev = (t_malloc *) tmpToMalloc;
-              else
-                ptrNextMalloc->next = NULL;
+              tmpToMalloc->prev = (t_free *) ptrNextMalloc->prev;
+              ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
+              tmpToMalloc->next = (t_free *) ptrNextMalloc;
+
               //my_putstr("ENNDNENNDNNENDN\n");
-              show_free_list();
+              //show_free_list();
               //exit (0);
 /*              printpointer(freeStruct);
               my_putstr("  -  ");
@@ -171,8 +173,8 @@ void    *check_in_free_list(size_t size)
             mallocStruct->end->next = NULL;
           }
       }
-      show_free_list();
-      show_alloc_mem();
+    //  show_free_list();
+      //show_alloc_mem();
       my_putstr("end of reuse ");
       printpointer(mallocStruct->end);
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
