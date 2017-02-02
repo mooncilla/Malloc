@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Thu Feb 02 17:12:45 2017 Full Name
+** Last update	Thu Feb 02 17:38:05 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -62,7 +62,7 @@ t_malloc *getNextMalloc(t_free *tmpToMalloc)
   t_malloc *tmp;
 
   tmp = mallocStruct;
-  while (tmp < (t_malloc*) tmpToMalloc)
+  while (tmp && tmp < (t_malloc*) tmpToMalloc)
     tmp = tmp->next;
   return (tmp);
 }
@@ -134,6 +134,18 @@ void    *check_in_free_list(size_t size)
             t_malloc *ptrNextMalloc;
             ptrNextMalloc = getNextMalloc(tmpToMalloc);
             //ptrNextMalloc = (void *) tmpToMalloc + tmpToMalloc->size + sizeof(t_free);
+            if (ptrNextMalloc == NULL)
+            {
+              mallocStruct->end->next = (t_malloc *) tmpToMalloc;
+              mallocStruct->end->next->prev = mallocStruct->end;
+              mallocStruct->end = (t_malloc *) tmpToMalloc;
+      //      mallocStruct->end->size = mallocStruct->size;
+              mallocStruct->end->next = NULL;
+              void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
+              return (returnPtr);
+
+              my_putstr("BITTTTTTTTTTTTTTTTTTTTTTEEEE : \n");
+            }
             if (ptrNextMalloc->prev == NULL)
             {
               ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
@@ -143,7 +155,6 @@ void    *check_in_free_list(size_t size)
             }
             else
             {
-              my_putstr("BITTTTTTTTTTTTTTTTTTTTTTEEEE : \n");
               printpointer(ptrNextMalloc);
               my_putstr("  -  ");
               printpointer(ptrNextMalloc->prev);
