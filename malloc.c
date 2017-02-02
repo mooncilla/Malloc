@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Thu Feb 02 03:41:36 2017 Full Name
+** Last update	Thu Feb 02 03:50:17 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -108,7 +108,6 @@ void    *check_in_free_list(size_t size)
       {
           if (mallocStruct->end > (t_malloc *) tmpToMalloc)
           {
-            //my_putstr("ENNDNENNDNNENDN\n");
             t_malloc *ptrNextMalloc = (void *) tmpToMalloc + tmpToMalloc->size + sizeof(t_free);
             if (ptrNextMalloc->prev == NULL)
             {
@@ -121,7 +120,9 @@ void    *check_in_free_list(size_t size)
             else
             {
               ptrNextMalloc->prev->next = (t_malloc *) tmpToMalloc;
-              ptrNextMalloc->next->prev = (t_malloc *) tmpToMalloc;
+              if (ptrNextMalloc->next)
+                ptrNextMalloc->next->prev = (t_malloc *) tmpToMalloc;
+              //my_putstr("ENNDNENNDNNENDN\n");
             }
           }
           else
@@ -265,8 +266,8 @@ void		*malloc(size_t size)
     currentPageSize = allow_right(size);
   }
   void * ptrTestFree;
-  //if ((ptrTestFree = check_in_free_list(size)) != NULL)
-    //return (ptrTestFree);
+  if ((ptrTestFree = check_in_free_list(size)) != NULL)
+    return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
 	  sbrk(allow_right(size));
