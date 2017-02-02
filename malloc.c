@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Thu Feb 02 00:58:19 2017 Full Name
+** Last update	Thu Feb 02 03:41:36 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -69,7 +69,7 @@ void    *check_in_free_list(size_t size)
     my_putstr(" - ");
     my_putnbr(tmp->size);
     my_putstr("=======================\n"); */
-    if (tmp->size >= size + sizeof(t_free))
+    if (tmp->size >= size /* + sizeof(t_free)*/)
     {
       my_putstr("REUTILISATION \n");
 
@@ -94,8 +94,8 @@ void    *check_in_free_list(size_t size)
         freeStruct->prev = NULL;
       }
 
-//      show_free_list();
-  //    show_alloc_mem();
+      //show_free_list();
+      //show_alloc_mem();
       my_putstr("end of free list \n");
       if (mallocStruct == NULL)
       {
@@ -103,18 +103,41 @@ void    *check_in_free_list(size_t size)
         mallocStruct->end = mallocStruct;
         mallocStruct->next = NULL;
         mallocStruct->prev = NULL;
-        my_putstr("SEGFAUUULT  \n");
       }
       else
       {
-          mallocStruct->end->next = (t_malloc *) tmpToMalloc;
-          mallocStruct->end->next->prev = mallocStruct->end;
-          mallocStruct->end = (t_malloc *) tmpToMalloc;
-          mallocStruct->end->size = mallocStruct->size;
-          mallocStruct->end->next = NULL;
+          if (mallocStruct->end > (t_malloc *) tmpToMalloc)
+          {
+            //my_putstr("ENNDNENNDNNENDN\n");
+            t_malloc *ptrNextMalloc = (void *) tmpToMalloc + tmpToMalloc->size + sizeof(t_free);
+            if (ptrNextMalloc->prev == NULL)
+            {
+              my_putstr("=================\n");
+              ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
+              mallocStruct = (t_malloc *) tmpToMalloc;
+              mallocStruct->next = ptrNextMalloc;
+              mallocStruct->end = ptrNextMalloc->end;
+            }
+            else
+            {
+              ptrNextMalloc->prev->next = (t_malloc *) tmpToMalloc;
+              ptrNextMalloc->next->prev = (t_malloc *) tmpToMalloc;
+            }
+          }
+          else
+          {
+            mallocStruct->end->next = (t_malloc *) tmpToMalloc;
+            mallocStruct->end->next->prev = mallocStruct->end;
+            mallocStruct->end = (t_malloc *) tmpToMalloc;
+    //      mallocStruct->end->size = mallocStruct->size;
+            mallocStruct->end->next = NULL;
+          }
       }
-      my_putstr("end of reuse \n");
-      void *returnPtr = tmpToMalloc + sizeof(t_malloc);
+      show_free_list();
+      show_alloc_mem();
+      my_putstr("end of reuse ");
+      printpointer(mallocStruct->end);
+      void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
       /* SAVE OF TESTING FRAGMENTATION OF FREE
       t_free *tmpToMalloc;
@@ -242,8 +265,8 @@ void		*malloc(size_t size)
     currentPageSize = allow_right(size);
   }
   void * ptrTestFree;
-//  if ((ptrTestFree = check_in_free_list(size)) != NULL)
-  //  return (ptrTestFree);
+  //if ((ptrTestFree = check_in_free_list(size)) != NULL)
+    //return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
 	  sbrk(allow_right(size));
@@ -295,23 +318,18 @@ void		free(void *ptr)
   printpointer(ptr - sizeof(t_malloc));
   my_putstr("\n");
   tmp = ptr - sizeof(t_malloc);
-  printpointer(mallocStruct->end->prev);
-  my_putstr("\n");
   if (tmp->prev)
   {
-    my_putstr("SEGFAUUULT\n");
-    printpointer(tmp->prev);
-    my_putstr("\n");
     if (tmp->next == NULL)
     {
       mallocStruct->end = mallocStruct->end->prev;
-      my_putstr("SEGFAUUULT\n");
-      printpointer(mallocStruct->end);
-      my_putnbr(mallocStruct->end->size);
       mallocStruct->end->next = NULL;
     }
     else
+    {
       tmp->next->prev = tmp->prev;
+      tmp->prev->next = tmp->next;
+    }
   }
   else if (mallocStruct->next == NULL)
     mallocStruct = NULL;
