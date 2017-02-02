@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Thu Feb 02 16:18:41 2017 Full Name
+** Last update	Thu Feb 02 16:20:58 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -177,53 +177,6 @@ void    *check_in_free_list(size_t size)
       printpointer(mallocStruct->end);
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
-      /* SAVE OF TESTING FRAGMENTATION OF FREE
-      t_free *tmpToMalloc;
-      tmpToMalloc = tmp;
-      size_t sizeTmp = tmp->size;
-
-      tmpToMalloc->size = size;
-      if (tmpToMalloc->prev)
-      {
-        (tmpToMalloc->next != NULL ? tmpToMalloc->next->prev = tmpToMalloc->prev : 0);
-        tmpToMalloc->prev->next = tmpToMalloc->next;
-      }
-      else if (freeStruct->next == NULL)
-        freeStruct = NULL;
-      else
-      {
-        freeStruct = freeStruct->next;
-        freeStruct->prev = NULL;
-        freeStruct->end = freeStruct;
-      }
-
-      tmp = (void *) tmp + size + sizeof(t_free);
-      tmp->size = sizeTmp - (size + sizeof(t_free));
-      tmp->next = freeStruct;
-      tmp->prev = NULL;
-      if (tmp->next)
-        tmp->next->prev = tmp;
-      freeStruct = tmp;
-      if (freeStruct->next)
-        freeStruct->end = freeStruct->next->end;
-      else
-        freeStruct->end = freeStruct;
-
-      if (mallocStruct)
-      {
-        mallocStruct->end->next = (t_malloc *) tmpToMalloc;
-        mallocStruct->end->next->prev = mallocStruct->end;
-        mallocStruct->end = mallocStruct->end->next;
-        mallocStruct->end->next = NULL;
-      }
-      else
-      {
-        mallocStruct = (t_malloc *) tmpToMalloc;
-        mallocStruct->end = mallocStruct;
-        mallocStruct->next = NULL;
-        mallocStruct->prev = NULL;
-      }
-      return (tmpToMalloc + sizeof(t_malloc)); */
     }
     tmp = tmp->next;
   }
