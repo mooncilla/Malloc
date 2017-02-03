@@ -333,6 +333,30 @@ void    add_to_free_list(t_free *ptr)
       ptr->prev = tmp->prev;
       tmp->prev->next = ptr;
       tmp->prev = ptr;
+      /*----- ICI CA CHECK LA FUSION DES FREE--------------*/
+      if (ptr->prev && (ptr->prev - (ptr->prev->size + sizeof(t_free)) == ptr))
+	{
+	  ptr->prev->size += ptr->size;
+	  if (ptr->next)
+	    {
+	      ptr->prev->next = ptr->next;
+	      ptr->next->prev = ptr->prev;
+	    }
+	  else
+	    ptr->prev->next = NULL;
+	}
+      else if (ptr->next && (ptr + (ptr->size + sizeof(t_free)) == ptr->next))
+	{
+	  ptr->size += ptr->next->size;
+	  if (ptr->next->next)
+	    {
+	      ptr->next = ptr->next->next;
+	      ptr->next->prev = ptr->prev;
+	    }
+	  else
+	    ptr->next = NULL;
+	}	
+      /*----- ICI CA CHECK PLUS LA FUSION DES FREE NORMALEMENT FINI--------------*/
     }
     else if (ptr > freeStruct->end)
     {
