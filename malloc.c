@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 03 16:21:36 2017 Full Name
+** Last update	Fri Feb 03 18:48:51 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -323,46 +323,46 @@ void    add_to_free_list(t_free *ptr)
   }
   else
   {
-    show_free_list();
     if (ptr < freeStruct->end && ptr > freeStruct)
     {
+
       t_free *tmp;
       tmp = getNextFree(ptr);
 
-      ptr->next = tmp;
-      ptr->prev = tmp->prev;
-      tmp->prev->next = ptr;
-      tmp->prev = ptr;
-      /*----- ICI CA CHECK LA FUSION DES FREE--------------*/
-      if (ptr->prev && (ptr->prev - (ptr->prev->size + sizeof(t_free)) == ptr))
-	{
-	  ptr->prev->size += ptr->size;
-	  if (ptr->next)
-	    {
-	      ptr->prev->next = ptr->next;
-	      ptr->next->prev = ptr->prev;
-	    }
-	  else
-	    ptr->prev->next = NULL;
-	}
-      else if (ptr->next && (ptr + (ptr->size + sizeof(t_free)) == ptr->next))
-	{
-	  ptr->size += ptr->next->size;
-	  if (ptr->next->next)
-	    {
-	      ptr->next = ptr->next->next;
-	      ptr->next->prev = ptr->prev;
-	    }
-	  else
-	    ptr->next = NULL;
-	}	
-      /*----- ICI CA CHECK PLUS LA FUSION DES FREE NORMALEMENT FINI--------------*/
+      my_putstr("OUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n");
+      /* C'est la que ça segfault mdr, c'est pour lier le current avec le next si ça matche */
+
+      if (tmp == (void*) ptr + ptr->size + sizeof(t_free))
+      {
+        ptr->size += tmp->size + sizeof(t_free);
+        tmp->prev->next = ptr;
+        ptr->prev = tmp->prev;
+        if (tmp->next)
+        {
+          tmp->next->prev = ptr;
+          ptr->next = tmp->next;
+        }
+        else
+        {
+          freeStruct->end = ptr;
+          ptr->next = NULL;
+        }
+      }
+      /* fin de la condition */
+      if (tmp->prev && tmp->prev == (void*) ptr - (tmp->prev->size + sizeof(t_free)))
+        tmp->prev->size += ptr->size + sizeof(t_free);
+      else
+      {
+        ptr->next = tmp;
+        ptr->prev = tmp->prev;
+        tmp->prev->next = ptr;
+        tmp->prev = ptr;
+      }
     }
     else if (ptr > freeStruct->end)
     {
       if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
       {
-        my_putstr("OUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n");
         freeStruct->end->size += ptr->size + sizeof(t_malloc);
         ptr->prev = NULL;
         ptr->next = NULL;
@@ -386,7 +386,7 @@ void    add_to_free_list(t_free *ptr)
     }
   }
   //show_alloc_mem();
-  //show_free_list();
+  show_free_list();
 
 }
 
