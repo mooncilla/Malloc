@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 03 16:10:08 2017 Full Name
+** Last update	Fri Feb 03 16:21:36 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -323,6 +323,7 @@ void    add_to_free_list(t_free *ptr)
   }
   else
   {
+    show_free_list();
     if (ptr < freeStruct->end && ptr > freeStruct)
     {
       t_free *tmp;
@@ -332,9 +333,12 @@ void    add_to_free_list(t_free *ptr)
       ptr->prev = tmp->prev;
       tmp->prev->next = ptr;
       tmp->prev = ptr;
-    /*  if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
+    }
+    else if (ptr > freeStruct->end)
+    {
+      if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
       {
-        my_putstr("OUIIIIIIIIIIIIIIIIIIIIII \n");
+        my_putstr("OUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n");
         freeStruct->end->size += ptr->size + sizeof(t_malloc);
         ptr->prev = NULL;
         ptr->next = NULL;
@@ -346,16 +350,7 @@ void    add_to_free_list(t_free *ptr)
         freeStruct->end = ptr;
         //  freeStruct->end->size = ptr->size;
         freeStruct->end->next = NULL;
-      } */
-
-    }
-    else if (ptr > freeStruct->end)
-    {
-      freeStruct->end->next = ptr;
-      freeStruct->end->next->prev = freeStruct->end;
-      freeStruct->end = ptr;
-      //  freeStruct->end->size = ptr->size;
-      freeStruct->end->next = NULL;
+      }
     }
     else
     {
