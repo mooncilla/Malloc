@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 03 15:39:33 2017 Full Name
+** Last update	Fri Feb 03 16:10:08 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -63,16 +63,17 @@ t_malloc *getNextMalloc(t_free *tmpToMalloc)
 
   tmp = mallocStruct;
   while (tmp && tmp < (t_malloc*) tmpToMalloc)
-  {
     tmp = tmp->next;
-/*    my_putstr("SEGSEGDSEG : \n");
-    printpointer(tmp);
-    my_putstr("\n");
-    printpointer(tmpToMalloc);
-    my_putstr("\n");
-    printpointer(mallocStruct->end);
-    my_putstr("\nSEGSEGDSEG : \n"); */
-  }
+  return (tmp);
+}
+
+t_free *getNextFree(t_free *tmpToMalloc)
+{
+  t_free *tmp;
+
+  tmp = freeStruct;
+  while (tmp && tmp < (t_free*) tmpToMalloc)
+    tmp = tmp->next;
   return (tmp);
 }
 
@@ -260,7 +261,7 @@ size_t		allow_right(size_t	needed)
 {
   size_t	right;
 
-  right = PAGESIZE * 2;
+  right = PAGESIZE;
   while (right <= (needed + sizeof(t_malloc)))
     right += PAGESIZE;
   return(right);
@@ -322,9 +323,16 @@ void    add_to_free_list(t_free *ptr)
   }
   else
   {
-    if (ptr > freeStruct->end)
+    if (ptr < freeStruct->end && ptr > freeStruct)
     {
-      if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
+      t_free *tmp;
+      tmp = getNextFree(ptr);
+
+      ptr->next = tmp;
+      ptr->prev = tmp->prev;
+      tmp->prev->next = ptr;
+      tmp->prev = ptr;
+    /*  if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
       {
         my_putstr("OUIIIIIIIIIIIIIIIIIIIIII \n");
         freeStruct->end->size += ptr->size + sizeof(t_malloc);
@@ -338,7 +346,16 @@ void    add_to_free_list(t_free *ptr)
         freeStruct->end = ptr;
         //  freeStruct->end->size = ptr->size;
         freeStruct->end->next = NULL;
-      }
+      } */
+
+    }
+    else if (ptr > freeStruct->end)
+    {
+      freeStruct->end->next = ptr;
+      freeStruct->end->next->prev = freeStruct->end;
+      freeStruct->end = ptr;
+      //  freeStruct->end->size = ptr->size;
+      freeStruct->end->next = NULL;
     }
     else
     {
