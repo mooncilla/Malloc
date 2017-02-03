@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 03 18:48:51 2017 Full Name
+** Last update	Fri Feb 03 20:00:36 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -329,27 +329,27 @@ void    add_to_free_list(t_free *ptr)
       t_free *tmp;
       tmp = getNextFree(ptr);
 
-      my_putstr("OUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n");
       /* C'est la que ça segfault mdr, c'est pour lier le current avec le next si ça matche */
 
       if (tmp == (void*) ptr + ptr->size + sizeof(t_free))
       {
+        my_putstr("OUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII \n");
         ptr->size += tmp->size + sizeof(t_free);
         tmp->prev->next = ptr;
         ptr->prev = tmp->prev;
+        ptr->next = tmp->next;
         if (tmp->next)
-        {
           tmp->next->prev = ptr;
-          ptr->next = tmp->next;
-        }
         else
-        {
           freeStruct->end = ptr;
-          ptr->next = NULL;
+        if (ptr->prev == (void*) ptr - (ptr->prev->size + sizeof(t_free)))
+        {
+          ptr->prev->size += ptr->size + sizeof(t_free);
+          ptr->prev->next = ptr->next;
+          (ptr->next ? ptr->next->prev = ptr->prev : 0);
         }
       }
-      /* fin de la condition */
-      if (tmp->prev && tmp->prev == (void*) ptr - (tmp->prev->size + sizeof(t_free)))
+      else if (tmp->prev && tmp->prev == (void*) ptr - (tmp->prev->size + sizeof(t_free)))
         tmp->prev->size += ptr->size + sizeof(t_free);
       else
       {
