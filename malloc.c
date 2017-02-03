@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 03 13:49:10 2017 Full Name
+** Last update	Fri Feb 03 15:39:33 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -73,11 +73,6 @@ t_malloc *getNextMalloc(t_free *tmpToMalloc)
     printpointer(mallocStruct->end);
     my_putstr("\nSEGSEGDSEG : \n"); */
   }
-  if (tmp == NULL)
-  {
-      show_alloc_mem();
-    show_free_list();
-  }
   return (tmp);
 }
 
@@ -96,12 +91,12 @@ void    *check_in_free_list(size_t size)
     if (tmp->size >= size /* + sizeof(t_free)*/)
     {
       //show_free_list();
-      show_alloc_mem();
+      //show_alloc_mem();
       my_putstr("REUTILISATION \n");
 
       t_free *tmpToMalloc = tmp;
 
-      show_free_list();
+      //show_free_list();
       if (tmpToMalloc->prev)
       {
         my_putstr("FA\n");
@@ -138,6 +133,8 @@ void    *check_in_free_list(size_t size)
   //      show_free_list();
     //  show_alloc_mem();
       my_putstr("end of free list \n");
+      printpointer(tmpToMalloc);
+      my_putstr("\n");
       if (mallocStruct == NULL)
       {
         mallocStruct = (t_malloc *) tmpToMalloc;
@@ -166,14 +163,16 @@ void    *check_in_free_list(size_t size)
             {
               my_putstr("MB\n");
 
-              printpointer(ptrNextMalloc);
-              my_putstr("  -  ");
-              printpointer(ptrNextMalloc->prev);
-              my_putstr(" \n");
               tmpToMalloc->prev = (t_free *) ptrNextMalloc->prev;
               tmpToMalloc->next = (t_free *) ptrNextMalloc;
               ptrNextMalloc->prev->next = (t_malloc *) tmpToMalloc;
               ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
+              printpointer(tmpToMalloc->prev);
+              my_putstr("  -  ");
+              printpointer(tmpToMalloc);
+              my_putstr("  -  ");
+              printpointer(tmpToMalloc->next);
+              my_putstr(" \n");
 
               //my_putstr("ENNDNENNDNNENDN\n");
               //show_free_list();
@@ -200,6 +199,7 @@ void    *check_in_free_list(size_t size)
       //show_alloc_mem();
       my_putstr("end of reuse ");
       printpointer(mallocStruct->end);
+      my_putstr("\n");
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
     }
@@ -242,12 +242,14 @@ void    *push_back_malloc_list(size_t size)
       {
         tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc);
       }
+    //  show_free_list();
       mallocStruct->end = tmp->next;
       tmp->next->size = size;
       tmp->next->next = NULL;
       tmp->next->prev = tmp;
       void *ptr = (void *) tmp->next + sizeof(t_malloc);
       my_putstr("===========SORTIE MALLOC===========\n");
+      //show_free_list();
   //    show_alloc_mem();
     //  show_free_list();
       return (ptr);
@@ -284,7 +286,7 @@ void		*malloc(size_t size)
   my_putnbr(size);
   my_putstr("\n");
   my_putstr("===========ENTRE MALLOC===========\n");
-//  show_alloc_mem();
+//  show_free_list();
   //my_putstr("\n");
 
   if (mallocStruct == NULL)
@@ -320,20 +322,31 @@ void    add_to_free_list(t_free *ptr)
   }
   else
   {
-    if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
+    if (ptr > freeStruct->end)
     {
-      my_putstr("OUIIIIIIIIIIIIIIIIIIIIII \n");
-      freeStruct->end->size += ptr->size + sizeof(t_malloc);
-      ptr->prev = NULL;
-      ptr->next = NULL;
+      if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
+      {
+        my_putstr("OUIIIIIIIIIIIIIIIIIIIIII \n");
+        freeStruct->end->size += ptr->size + sizeof(t_malloc);
+        ptr->prev = NULL;
+        ptr->next = NULL;
+      }
+      else
+      {
+        freeStruct->end->next = ptr;
+        freeStruct->end->next->prev = freeStruct->end;
+        freeStruct->end = ptr;
+        //  freeStruct->end->size = ptr->size;
+        freeStruct->end->next = NULL;
+      }
     }
     else
     {
-      freeStruct->end->next = ptr;
-      freeStruct->end->next->prev = freeStruct->end;
-      freeStruct->end = ptr;
-      freeStruct->end->size = ptr->size;
-      freeStruct->end->next = NULL;
+      ptr->end = freeStruct->end;
+      ptr->prev = NULL;
+      ptr->next = freeStruct;
+      freeStruct->prev = ptr;
+      freeStruct = ptr;
     }
   }
   //show_alloc_mem();
@@ -392,8 +405,8 @@ void    *realloc(void *ptr, size_t size)
     return (NULL);
   }
   tmp = NULL;
-  //if ((tmp = check_in_free_list(size)) != NULL)
-   //return (tmp);
+  if ((tmp = check_in_free_list(size)) != NULL)
+   return (tmp);
   ptrStruct = ptr - sizeof(t_malloc);
   tmp = malloc(size);
   if (ptrStruct->size < size)
