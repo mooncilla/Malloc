@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Sat Feb 04 22:00:13 2017 Full Name
+** Last update	Sat Feb 04 22:58:42 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -64,7 +64,6 @@ void    *check_in_free_list(size_t size)
       if ((int)((int) tmpToMalloc->size - ((int) size + sizeof(t_free))) >=  2)
       {
         t_free *tmpNext;
-
         tmpNext = (void *) tmpToMalloc + size + sizeof(t_free);
         tmpNext->size = tmpToMalloc->size - (size + sizeof(t_free));
         tmpToMalloc->size = size;
@@ -140,9 +139,8 @@ void    *check_in_free_list(size_t size)
             mallocStruct->end->next = NULL;
           }
       }
-      tmpToMalloc->c = 'm';
+      tmpToMalloc->c = MALLOC_FLAG;
       // Fin ajout du free dans le malloc //
-
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
     }
@@ -184,7 +182,7 @@ void    add_to_free_list(t_free *ptr)
           (ptr->next ? ptr->next->prev = ptr->prev : (freeStruct->end = ptr->prev));
         }
       }
-     else if (tmp->prev && tmp->prev == (void*) ptr - (tmp->prev->size + sizeof(t_free)))
+      else if (tmp->prev && tmp->prev == (void*) ptr - (tmp->prev->size + sizeof(t_free)))
         tmp->prev->size += ptr->size + sizeof(t_free);
       else
       {
