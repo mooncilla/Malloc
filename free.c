@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Sat Feb 04 03:01:29 2017 Full Name
+** Last update	Sat Feb 04 22:00:13 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -59,6 +59,27 @@ void    *check_in_free_list(size_t size)
     if (tmp->size >= size)
     {
       t_free *tmpToMalloc = tmp;
+
+      // Debut Fracturation des free //
+      if ((int)((int) tmpToMalloc->size - ((int) size + sizeof(t_free))) >=  2)
+      {
+        t_free *tmpNext;
+
+        tmpNext = (void *) tmpToMalloc + size + sizeof(t_free);
+        tmpNext->size = tmpToMalloc->size - (size + sizeof(t_free));
+        tmpToMalloc->size = size;
+        tmpNext->prev = tmpToMalloc;
+        tmpNext->next = tmpToMalloc->next;
+        if (tmpToMalloc->next)
+          tmpToMalloc->next->prev = tmpNext;
+        else
+          freeStruct->end = tmpNext;
+        tmpToMalloc->next = tmpNext;
+        tmpNext->c = FREE_FLAG;
+      }
+      // Fin Fracturation des free //
+
+      // Debut retirer le free des free //
       if (tmpToMalloc->prev)
       {
         if (tmpToMalloc->next == NULL)
@@ -80,6 +101,9 @@ void    *check_in_free_list(size_t size)
         freeStruct = freeStruct->next;
         freeStruct->prev = NULL;
       }
+      // Fin retirer le free des free //
+
+      // Debut ajout du free dans le malloc //
       if (mallocStruct == NULL)
       {
         mallocStruct = (t_malloc *) tmpToMalloc;
@@ -116,6 +140,9 @@ void    *check_in_free_list(size_t size)
             mallocStruct->end->next = NULL;
           }
       }
+      tmpToMalloc->c = 'm';
+      // Fin ajout du free dans le malloc //
+
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
     }
@@ -135,9 +162,9 @@ void    add_to_free_list(t_free *ptr)
   }
   else
   {
+    // Debut ajout du free au mileu de la liste //
     if (ptr < freeStruct->end && ptr > freeStruct)
     {
-
       t_free *tmp;
       tmp = getNextFree(ptr);
       if (tmp == (void *) ptr + ptr->size + sizeof(t_free))
@@ -167,9 +194,12 @@ void    add_to_free_list(t_free *ptr)
         tmp->prev = ptr;
       }
     }
+    // Fin ajout du free au mileu de la liste //
+
+    // Debut ajout du free à la fin de la liste //
     else if (ptr > freeStruct->end)
     {
-      if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_malloc) == (void *) ptr)
+      if ((void *) freeStruct->end + freeStruct->end->size + sizeof(t_free) == (void *) ptr)
       {
         freeStruct->end->size += ptr->size + sizeof(t_malloc);
         ptr->prev = NULL;
@@ -183,6 +213,9 @@ void    add_to_free_list(t_free *ptr)
         freeStruct->end->next = NULL;
       }
     }
+    // Fin ajout du free à la fin de la liste //
+
+    // Debut ajout du free au début de la liste //
     else
     {
       ptr->end = freeStruct->end;
@@ -191,7 +224,9 @@ void    add_to_free_list(t_free *ptr)
       freeStruct->prev = ptr;
       freeStruct = ptr;
     }
+    // Fin ajout du free au début de la liste //
   }
+  ptr->c = FREE_FLAG;
 }
 
 void		free(void *ptr)
@@ -200,10 +235,6 @@ void		free(void *ptr)
 
   if (ptr == NULL)
     return;
-  //pthread_mutex_lock(&lock_mutex);
-/*  my_putstr("free : ");
-  printpointer(ptr - sizeof(t_malloc));
-  my_putstr("\n"); */
   tmp = ptr - sizeof(t_malloc);
   if (tmp->prev)
   {
@@ -228,5 +259,4 @@ void		free(void *ptr)
   }
   memset(ptr, 0, tmp->size);
   add_to_free_list((t_free *) tmp);
-  //pthread_mutex_unlock(&lock_mutex);
 }
