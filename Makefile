@@ -12,7 +12,7 @@ CC				=       gcc -g -g3
 
 RM				=       rm -rf
 
-CFLAGS		=				-Wall -Wextra -W -fPIC
+CFLAGS		=				-Wall -Wextra -W -fPIC -lpthread
 
 LFLAGS		=				-shared
 
@@ -20,6 +20,7 @@ NAME			=				libmy_malloc.so
 
 SRCS			=				malloc.c \
 									utils.c	\
+									free.c \
 									printpointer.c
 
 OBJS			=				$(SRCS:.c=.o)

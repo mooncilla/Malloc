@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:47:37 2017
-** Last update	Thu Feb 02 11:33:56 2017 Full Name
+** Last update	Fri Feb 03 11:52:30 2017 Full Name
 */
 
 #include <string.h>
@@ -18,7 +18,7 @@ int main()
   char *bonsoir;
   char *oui;
 
-for (int i = 0; i < 3; ++i)
+for (int i = 0; i < 1; ++i)
   {
    test = malloc(100);
    test = memset(test, 't', 100);
@@ -45,9 +45,9 @@ for (int i = 0; i < 3; ++i)
 
     show_alloc_mem();
     show_free_list();
-    free(test);
+//    free(test);
     //free(bonsoir);
-    free(oui);
+  //  free(oui);
     my_putstr(" --------------PRINT OF END------------- \n");
     show_alloc_mem();
     show_free_list();
