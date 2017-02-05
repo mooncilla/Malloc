@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Sat Feb 04 22:58:42 2017 Full Name
+** Last update	Sun Feb 05 10:57:56 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -181,9 +181,13 @@ void    add_to_free_list(t_free *ptr)
           ptr->prev->next = ptr->next;
           (ptr->next ? ptr->next->prev = ptr->prev : (freeStruct->end = ptr->prev));
         }
+        memset(tmp, 0, sizeof(t_free));
       }
       else if (tmp->prev && tmp->prev == (void*) ptr - (tmp->prev->size + sizeof(t_free)))
+      {
         tmp->prev->size += ptr->size + sizeof(t_free);
+        memset(ptr, 0, sizeof(t_free));
+      }
       else
       {
         ptr->next = tmp;
