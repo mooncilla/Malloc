@@ -75,7 +75,7 @@ void    *check_in_free_list(size_t size)
           freeStruct->end = tmpNext;
         tmpToMalloc->next = tmpNext;
         tmpNext->c = FREE_FLAG;
-      }
+	}
       // Fin Fracturation des free //
 
       // Debut retirer le free des free //
@@ -122,6 +122,7 @@ void    *check_in_free_list(size_t size)
               mallocStruct = (t_malloc *) tmpToMalloc;
               mallocStruct->next = ptrNextMalloc;
               mallocStruct->end = ptrNextMalloc->end;
+	      mallocStruct->prev = NULL;
             }
             else
             {
@@ -141,6 +142,7 @@ void    *check_in_free_list(size_t size)
       }
       tmpToMalloc->c = MALLOC_FLAG;
       // Fin ajout du free dans le malloc //
+	
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
     }
@@ -259,6 +261,5 @@ void		free(void *ptr)
     mallocStruct = mallocStruct->next;
     mallocStruct->prev = NULL;
   }
-  memset(ptr, 0, tmp->size);
   add_to_free_list((t_free *) tmp);
 }
