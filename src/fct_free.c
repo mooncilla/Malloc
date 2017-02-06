@@ -1,11 +1,11 @@
 /*
 ** fct_free.c for malloc in /home/julian_r/rendu/systeme_unix/PSU_2016_malloc
-** 
+**
 ** Made by Juliani Renaud
 ** Login   <julian_r@epitech.net>
-** 
+**
 ** Started on  Mon Feb  6 10:58:07 2017 Juliani Renaud
-** Last update Mon Feb  6 11:36:29 2017 Juliani Renaud
+** Last update	Mon Feb 06 12:28:25 2017 Full Name
 */
 
 #include "malloc.h"
@@ -58,6 +58,7 @@ void		removeFree(t_free *tmpToMalloc)
 void		addFreeToMalloc2(t_free *tmpToMalloc)
 {
   t_malloc *ptrNextMalloc;
+
   ptrNextMalloc = getNextMalloc(tmpToMalloc);
   if (ptrNextMalloc->prev == NULL)
     {

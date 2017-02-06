@@ -8,13 +8,13 @@
 ## Last update Mon Feb  6 12:10:54 2017 Juliani Renaud
 ##
 
-CC				=       gcc -g -g3
+CC				=       gcc
 
 RM				=       rm -rf
 
-CFLAGS		=				-Wall -Wextra -W -fPIC -lpthread
-CFLAGS		=				-I./include
-LFLAGS		=				-shared
+CFLAGS		+=				-Wall -Wextra -W -Werror -fPIC
+CFLAGS		+=				-I./include
+LDFLAGS		+=				-shared
 
 NAME			=				libmy_malloc.so
 
@@ -30,9 +30,8 @@ OBJS			=				$(SRCS:.c=.o)
 
 all				:       $(NAME)
 
-$(NAME)		:
-									$(CC) -c $(CFLAGS) $(SRCS)
-									$(CC) $(LFLAGS) -o $(NAME) $(OBJS)
+$(NAME)		:				$(OBJS)
+									$(CC) -o $(NAME) $(OBJS) $(CFLAGS) $(LDFLAGS)
 
 clean			:
 									$(RM) $(OBJS)
