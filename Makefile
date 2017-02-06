@@ -5,7 +5,7 @@
 ## Login   <gastal_r>
 ##
 ## Started on  Fri Jan 27 12:28:44 2017
-## Last update Fri Jan 27 12:28:44 2017
+## Last update Mon Feb  6 12:10:54 2017 Juliani Renaud
 ##
 
 CC				=       gcc -g -g3
@@ -13,15 +13,18 @@ CC				=       gcc -g -g3
 RM				=       rm -rf
 
 CFLAGS		=				-Wall -Wextra -W -fPIC -lpthread
-
+CFLAGS		=				-I./include
 LFLAGS		=				-shared
 
 NAME			=				libmy_malloc.so
 
-SRCS			=				malloc.c \
-									utils.c	\
-									free.c \
-									printpointer.c
+SRCS			=				src/malloc.c \
+									src/utils.c	\
+									src/free.c \
+									src/printpointer.c \
+									src/add_to_free.c \
+									src/push_back_fct.c \
+									src/fct_free.c
 
 OBJS			=				$(SRCS:.c=.o)
 

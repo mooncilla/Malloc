@@ -46,27 +46,15 @@ t_malloc *getNextMalloc(t_free *tmpToMalloc)
 
 void    *push_back_malloc_list(size_t size, size_t currentPageSize)
 {
-
     if (mallocStruct == NULL)
-    {
-      if (freeStruct)
-        mallocStruct = (void *) freeStruct->end + freeStruct->end->size + sizeof(t_free);
-      else
-        mallocStruct = sbrk(0) - currentPageSize;
-      mallocStruct->size = size;
-      mallocStruct->end = mallocStruct;
-      mallocStruct->next = NULL;
-      mallocStruct->prev = NULL;
-      mallocStruct->c = MALLOC_FLAG;
-      void *ptr = (void *) mallocStruct + sizeof(t_malloc);
-      return (ptr);
-    }
+      return (push_if_null(size, currentPageSize));
     else
     {
       t_malloc *tmp;
       tmp = mallocStruct->end;
       if (freeStruct && freeStruct->end > (t_free *) mallocStruct->end)
-        tmp->next = (void *) freeStruct->end + freeStruct->end->size + sizeof(t_free);
+        tmp->next = (void *) freeStruct->end + freeStruct->end->size
+	  + sizeof(t_free);
       else
         tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc);
       mallocStruct->end = tmp->next;
@@ -77,23 +65,6 @@ void    *push_back_malloc_list(size_t size, size_t currentPageSize)
       void *ptr = (void *) tmp->next + sizeof(t_malloc);
       return (ptr);
     }
-}
-
-size_t		allow_right(size_t	needed)
-{
-  size_t	right;
-
-  right = PAGESIZE * 2;
-  while (right <= (needed + sizeof(t_malloc)))
-    right += PAGESIZE;
-  return(right);
-}
-
-void   *calloc(size_t nmemb, size_t size)
-{
-  void *ptr = malloc(nmemb * size);
-  ptr = memset(ptr, 0, nmemb * size);
-  return (ptr);
 }
 
 void		*malloc(size_t size)
@@ -112,8 +83,9 @@ void		*malloc(size_t size)
     return (ptrTestFree);
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
-	  sbrk(allow_right(size));
-    pagerUsedSize = (size + sizeof(t_malloc)) - (currentPageSize - pagerUsedSize);
+    sbrk(allow_right(size));
+    pagerUsedSize = (size + sizeof(t_malloc))
+      - (currentPageSize - pagerUsedSize);
     currentPageSize = allow_right(size);
     return (push_back_malloc_list(size, currentPageSize));
   }
