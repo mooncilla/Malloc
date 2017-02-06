@@ -10,13 +10,13 @@
 
 #include        "utils.h"
 
-void	           print_pointer(void *nbs)
+void		print_pointer(void *nbs)
 {
-  size_t         result;
-  size_t         div;
-  size_t         length;
-  size_t         nb;
-  char	         *base;
+  size_t	result;
+  size_t	div;
+  size_t	length;
+  size_t	nb;
+  char		*base;
 
   nb = (size_t)nbs;
   base = "0123456789ABCDEF";
@@ -34,10 +34,10 @@ void	           print_pointer(void *nbs)
     }
 }
 
-void            my_putnbr(int nb)
+void		my_putnbr(int nb)
 {
-  int           i;
-  int           x;
+  int		i;
+  int		x;
 
   i = 1;
   if (nb < 0)
@@ -55,16 +55,16 @@ void            my_putnbr(int nb)
     }
 }
 
-int             my_strlen(char *str)
+int		my_strlen(char *str)
 {
-  int           i;
+  int		i;
 
   i = -1;
   while (str[++i]);
   return (i);
 }
 
-void	           my_putstr(char *str)
+void		my_putstr(char *str)
 {
   write (2, str, my_strlen(str));
 }

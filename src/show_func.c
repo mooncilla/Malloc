@@ -11,9 +11,9 @@
 #include        "malloc.h"
 
 extern t_malloc	*mallocStruct;
-extern t_free   *freeStruct;
+extern t_free	*freeStruct;
 
-void            show_alloc_mem()
+void		show_alloc_mem()
 {
   t_malloc	*tmp;
 
@@ -33,9 +33,9 @@ void            show_alloc_mem()
   }
 }
 
-void              show_free_list()
+void		show_free_list()
 {
-  t_free          *tmp;
+  t_free	*tmp;
 
   tmp = freeStruct;
   my_putstr("freeList : ");

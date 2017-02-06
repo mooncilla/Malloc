@@ -31,7 +31,7 @@ t_free		        *fracturation(size_t size, t_free *tmpToMalloc)
   return (tmpNext);
 }
 
-void              removeFree(t_free *tmpToMalloc)
+void			removeFree(t_free *tmpToMalloc)
 {
   if (tmpToMalloc->prev)
     {
@@ -54,12 +54,12 @@ void              removeFree(t_free *tmpToMalloc)
       freeStruct = freeStruct->next;
       freeStruct->prev = NULL;
     }
-  return;
+  return ;
 }
 
-void              addFreeToMalloc2(t_free *tmpToMalloc)
+void			addFreeToMalloc2(t_free *tmpToMalloc)
 {
-  t_malloc        *ptrNextMalloc;
+  t_malloc		*ptrNextMalloc;
 
   ptrNextMalloc = getNextMalloc(tmpToMalloc);
   if (ptrNextMalloc->prev == NULL)
@@ -79,7 +79,7 @@ void              addFreeToMalloc2(t_free *tmpToMalloc)
     }
 }
 
-void              addFreeToMalloc(t_free *tmpToMalloc)
+void			addFreeToMalloc(t_free *tmpToMalloc)
 {
   if (mallocStruct == NULL)
     {

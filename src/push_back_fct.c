@@ -8,15 +8,16 @@
 ** Last update	Mon Feb 06 19:13:00 2017 Full Name
 */
 
-#include          "malloc.h"
+#include        "malloc.h"
 
-extern t_malloc	  *mallocStruct;
-extern t_free     *freeStruct;
+extern t_malloc	*mallocStruct;
+extern t_free	*freeStruct;
 
-void			        *push_if_null(size_t size, size_t currentPageSize)
+void		*push_if_null(size_t size, size_t currentPageSize)
 {
   if (freeStruct)
-    mallocStruct = (void *) freeStruct->end + freeStruct->end->size + sizeof(t_free);
+    mallocStruct = (void *) freeStruct->end
+      + freeStruct->end->size + sizeof(t_free);
   else
     mallocStruct = sbrk(0) - currentPageSize;
   mallocStruct->size = size;
@@ -27,19 +28,19 @@ void			        *push_if_null(size_t size, size_t currentPageSize)
   return ((void *) mallocStruct + sizeof(t_malloc));
 }
 
-size_t            allow_right(size_t      needed)
+size_t		allow_right(size_t      needed)
 {
-  size_t          right;
+  size_t	right;
 
   right = PAGESIZE * 2;
   while (right <= (needed + sizeof(t_malloc)))
     right += PAGESIZE;
-  return(right);
+  return (right);
 }
 
-void              *calloc(size_t nmemb, size_t size)
+void		*calloc(size_t nmemb, size_t size)
 {
-  void            *ptr;
+  void		*ptr;
 
   ptr = malloc(nmemb * size);
   ptr = memset(ptr, 0, nmemb * size);

@@ -13,7 +13,7 @@
 extern	t_malloc	*mallocStruct;
 extern	t_free		*freeStruct;
 
-void			        merging_block(t_free *tmp, t_free *ptr)
+void			merging_block(t_free *tmp, t_free *ptr)
 {
   ptr->size += tmp->size + sizeof(t_free);
   tmp->prev->next = ptr;
@@ -33,9 +33,9 @@ void			        merging_block(t_free *tmp, t_free *ptr)
   memset(tmp, 0, sizeof(t_free));
 }
 
-void              add_middle(t_free *ptr)
+void			add_middle(t_free *ptr)
 {
-  t_free          *tmp;
+  t_free		*tmp;
 
   tmp = getNextFree(ptr);
   if (tmp == (void *) ptr + ptr->size + sizeof(t_free))
@@ -55,7 +55,7 @@ void              add_middle(t_free *ptr)
     }
 }
 
-void              add_end(t_free *ptr)
+void			add_end(t_free *ptr)
 {
   if ((void *) freeStruct->end + freeStruct->end->size
       + sizeof(t_free) == (void *) ptr)
@@ -73,7 +73,7 @@ void              add_end(t_free *ptr)
     }
 }
 
-void              free_malloc_head()
+void			free_malloc_head()
 {
   mallocStruct->next->end = mallocStruct->end;
   mallocStruct = mallocStruct->next;

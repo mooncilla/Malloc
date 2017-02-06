@@ -10,12 +10,12 @@
 
 #include        "malloc.h"
 
-extern          t_malloc    *mallocStruct;
-extern          t_free      *freeStruct;
+extern t_malloc *mallocStruct;
+extern t_free   *freeStruct;
 
-void            lock_mutex_init()
+void		lock_mutex_init()
 {
-  static int    init = 0;
+  static int	init = 0;
 
   if (init == 0)
   {
@@ -24,9 +24,9 @@ void            lock_mutex_init()
   }
 }
 
-t_malloc        *getNextMalloc(t_free *tmpToMalloc)
+t_malloc	*getNextMalloc(t_free *tmpToMalloc)
 {
-  t_malloc      *ptr;
+  t_malloc	*ptr;
 
   ptr = (void *) tmpToMalloc + tmpToMalloc->size + sizeof(t_malloc);
   while (ptr->flag != MALLOC_FLAG)
@@ -34,13 +34,14 @@ t_malloc        *getNextMalloc(t_free *tmpToMalloc)
   return (ptr);
 }
 
-void            *push_back_malloc_list(size_t size, size_t currentPageSize)
+void		*push_back_malloc_list(size_t size, size_t currentPageSize)
 {
+    t_malloc	*tmp;
+
     if (mallocStruct == NULL)
       return (push_if_null(size, currentPageSize));
     else
     {
-      t_malloc *tmp;
       tmp = mallocStruct->end;
       if (freeStruct && freeStruct->end > (t_free *) mallocStruct->end)
         tmp->next = (void *) freeStruct->end
@@ -56,11 +57,11 @@ void            *push_back_malloc_list(size_t size, size_t currentPageSize)
     }
 }
 
-void            *malloc(size_t size)
+void		*malloc(size_t size)
 {
   static size_t pagerUsedSize;
   static size_t currentPageSize;
-  void          *ptrTestFree;
+  void		*ptrTestFree;
 
   lock_mutex_init();
   pthread_mutex_lock(&lock_mutex);
@@ -92,10 +93,10 @@ void            *malloc(size_t size)
   }
 }
 
-void            *realloc(void *ptr, size_t size)
+void		*realloc(void *ptr, size_t size)
 {
-  void          *tmp;
-  t_malloc      *ptrStruct;
+  void		*tmp;
+  t_malloc	*ptrStruct;
 
   if (ptr == NULL)
     return (malloc(size));
