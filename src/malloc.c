@@ -5,13 +5,14 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Mon Feb 06 19:15:12 2017 Full Name
+** Last update	Mon Feb 06 23:37:47 2017 Full Name
 */
 
 #include        "malloc.h"
 
 extern t_malloc *mallocStruct;
 extern t_free   *freeStruct;
+extern pthread_mutex_t mutex_malloc;
 
 void		lock_mutex_init()
 {
@@ -19,7 +20,7 @@ void		lock_mutex_init()
 
   if (init == 0)
   {
-    lock_mutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    mutex_malloc = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
     init = 1;
   }
 }
@@ -39,7 +40,9 @@ void		*push_back_malloc_list(size_t size, size_t currentPageSize)
     t_malloc	*tmp;
 
     if (mallocStruct == NULL)
+    {
       return (push_if_null(size, currentPageSize));
+    }
     else
     {
       tmp = mallocStruct->end;
@@ -53,6 +56,7 @@ void		*push_back_malloc_list(size_t size, size_t currentPageSize)
       tmp->next->next = NULL;
       tmp->next->prev = tmp;
       tmp->next->flag = MALLOC_FLAG;
+      pthread_mutex_unlock(&mutex_malloc);
       return ((void *) tmp->next + sizeof(t_malloc));
     }
 }
@@ -64,7 +68,7 @@ void		*malloc(size_t size)
   void		*ptrTestFree;
 
   lock_mutex_init();
-  pthread_mutex_lock(&lock_mutex);
+  pthread_mutex_lock(&mutex_malloc);
   (size == 0 ? size = 8 : size);
   if (mallocStruct == NULL)
   {
@@ -73,7 +77,7 @@ void		*malloc(size_t size)
   }
   if ((ptrTestFree = check_in_free_list(size)) != NULL)
   {
-    pthread_mutex_unlock(&lock_mutex);
+    pthread_mutex_unlock(&mutex_malloc);
     return (ptrTestFree);
   }
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
@@ -82,13 +86,11 @@ void		*malloc(size_t size)
     pagerUsedSize = (size + sizeof(t_malloc))
     - (currentPageSize - pagerUsedSize);
     currentPageSize = allow_right(size);
-    pthread_mutex_unlock(&lock_mutex);
     return (push_back_malloc_list(size, currentPageSize));
   }
   else
   {
     pagerUsedSize += size + sizeof(t_malloc);
-    pthread_mutex_unlock(&lock_mutex);
     return (push_back_malloc_list(size, currentPageSize));
   }
 }

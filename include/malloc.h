@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Mon Feb 06 20:48:31 2017 Full Name
+** Last update	Mon Feb 06 23:34:40 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -40,7 +40,8 @@ typedef struct      s_free
 
 t_malloc            *mallocStruct;
 t_free              *freeStruct;
-pthread_mutex_t     lock_mutex;
+
+pthread_mutex_t     mutex_malloc;
 
 void                *malloc(size_t size);
 void                *realloc(void *ptr, size_t size);

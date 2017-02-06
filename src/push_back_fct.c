@@ -5,7 +5,7 @@
 ** Login   <julian_r@epitech.net>
 **
 ** Started on  Mon Feb  6 11:58:49 2017 Juliani Renaud
-** Last update	Mon Feb 06 19:13:00 2017 Full Name
+** Last update	Mon Feb 06 23:31:09 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -25,6 +25,7 @@ void		*push_if_null(size_t size, size_t currentPageSize)
   mallocStruct->next = NULL;
   mallocStruct->prev = NULL;
   mallocStruct->flag = MALLOC_FLAG;
+  pthread_mutex_unlock(&mutex_malloc);
   return ((void *) mallocStruct + sizeof(t_malloc));
 }
 

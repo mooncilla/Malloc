@@ -5,13 +5,14 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Mon Feb 06 19:47:36 2017 Full Name
+** Last update	Mon Feb 06 23:37:41 2017 Full Name
 */
 
 #include          "malloc.h"
 
 extern t_malloc   *mallocStruct;
 extern t_free     *freeStruct;
+extern pthread_mutex_t mutex_malloc;
 
 t_free		  *getNextFree(t_free *tmpToMalloc)
 {
@@ -80,9 +81,12 @@ void		        free(void *ptr)
 {
   t_malloc		*tmp;
 
+  pthread_mutex_lock(&mutex_malloc);
   if (ptr == NULL)
-    return ;
-  pthread_mutex_lock(&lock_mutex);
+    {
+      pthread_mutex_unlock(&mutex_malloc);
+      return ;
+    }
   tmp = ptr - sizeof(t_malloc);
   if (tmp->prev)
   {
@@ -102,5 +106,5 @@ void		        free(void *ptr)
   else
     free_malloc_head();
   add_to_free_list((t_free *) tmp);
-  pthread_mutex_unlock(&lock_mutex);
+  pthread_mutex_unlock(&mutex_malloc);
 }
