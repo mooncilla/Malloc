@@ -12,7 +12,7 @@ CC				=       gcc
 
 RM				=       rm -rf
 
-CFLAGS		+=				-Wall -Wextra -W -Werror -fPIC
+CFLAGS		+=				-Wall -Wextra -W -Werror -fPIC -lpthread
 CFLAGS		+=				-I./include
 LDFLAGS		+=				-shared
 

@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Sat Feb 04 21:53:01 2017 Full Name
+** Last update	Mon Feb 06 13:38:07 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -64,5 +64,7 @@ void	*push_if_null(size_t, size_t);
 
 t_malloc    *mallocStruct;
 t_free      *freeStruct;
+
+pthread_mutex_t     lock_mutex;
 
 #endif /* !MALLOC_H_ */

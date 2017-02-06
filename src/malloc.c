@@ -5,13 +5,24 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Sat Feb 04 22:00:22 2017 Full Name
+** Last update	Mon Feb 06 13:48:04 2017 Full Name
 */
 
 #include  "malloc.h"
 
 extern    t_malloc    *mallocStruct;
 extern    t_free      *freeStruct;
+
+void    lock_mutex_init()
+{
+  static int init = 0;
+
+  if (init == 0)
+  {
+    lock_mutex = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    init = 1;
+  }
+}
 
 void		show_alloc_mem()
 {
@@ -72,6 +83,8 @@ void		*malloc(size_t size)
   static size_t   pagerUsedSize;
   static size_t      currentPageSize;
 
+  lock_mutex_init();
+  pthread_mutex_lock(&lock_mutex);
   (size == 0 ? size = 8 : size);
   if (mallocStruct == NULL)
   {
@@ -80,18 +93,23 @@ void		*malloc(size_t size)
   }
   void * ptrTestFree;
   if ((ptrTestFree = check_in_free_list(size)) != NULL)
+  {
+    pthread_mutex_unlock(&lock_mutex);
     return (ptrTestFree);
+  }
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
     sbrk(allow_right(size));
     pagerUsedSize = (size + sizeof(t_malloc))
       - (currentPageSize - pagerUsedSize);
     currentPageSize = allow_right(size);
+    pthread_mutex_unlock(&lock_mutex);
     return (push_back_malloc_list(size, currentPageSize));
   }
   else
   {
     pagerUsedSize += size + sizeof(t_malloc);
+    pthread_mutex_unlock(&lock_mutex);
     return (push_back_malloc_list(size, currentPageSize));
   }
 }

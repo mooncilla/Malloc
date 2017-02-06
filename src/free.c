@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Sun Feb 05 10:57:56 2017 Full Name
+** Last update	Mon Feb 06 13:48:29 2017 Full Name
 */
 
 #include  "malloc.h"
@@ -76,7 +76,7 @@ void    *check_in_free_list(size_t size)
       // Debut ajout du free dans le malloc //
       addFreeToMalloc(tmpToMalloc);
       // Fin ajout du free dans le malloc //
-	
+
       void *returnPtr = (void *) tmpToMalloc + sizeof(t_malloc);
       return (returnPtr);
     }
@@ -126,6 +126,7 @@ void		free(void *ptr)
 
   if (ptr == NULL)
     return;
+  pthread_mutex_lock(&lock_mutex);
   tmp = ptr - sizeof(t_malloc);
   if (tmp->prev)
   {
@@ -145,4 +146,5 @@ void		free(void *ptr)
   else
     free_extend();
   add_to_free_list((t_free *) tmp);
+  pthread_mutex_unlock(&lock_mutex);
 }
