@@ -5,15 +5,16 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Mon Feb 06 13:38:07 2017 Full Name
+** Last update	Mon Feb 06 20:48:31 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
 #define             MALLOC_H_
 
-#include            <unistd.h>
 #include            <pthread.h>
 #include            <string.h>
+
+#include            "utils.h"
 
 #define             PAGESIZE sysconf  (_SC_PAGESIZE)
 #define             MALLOC_FLAG       'M'
@@ -25,7 +26,7 @@ typedef struct      s_malloc
   struct s_malloc   *prev;
   struct s_malloc   *end;
   size_t            size;
-  char              c;
+  char              flag;
 }                   t_malloc;
 
 typedef struct      s_free
@@ -34,37 +35,30 @@ typedef struct      s_free
   struct s_free     *prev;
   struct s_free     *end;
   size_t            size;
-  char              c;
+  char              flag;
 }                   t_free;
 
-void		 my_strlen(char *);
-void		 my_putchar(char);
-void		 my_putstr(char *);
-void		 printpointer(void *);
-void     *malloc(size_t size);
-void     *realloc(void *ptr, size_t size);
-void	   free(void *);
-void		 show_alloc_mem();
-size_t	allow_right(size_t);
-int      my_putnbr(int nb);
-void     *calloc(size_t nmemb, size_t size);
-void     show_free_list();
-void     *check_in_free_list(size_t size);
-t_malloc *getNextMalloc(t_free *tmpToMalloc);
-t_free	*getNextFree(t_free *);
-t_free	*fracturation(size_t, t_free *, t_free *);
-void	removeFree(t_free *);
-void	addFreeToMalloc(t_free *);
-void	addFreeToMalloc2(t_free *);
-void	add_end(t_free*);
-void	add_middle(t_free *);
-void	add_middle2(t_free *, t_free *);
-void	free_extend();
-void	*push_if_null(size_t, size_t);
-
-t_malloc    *mallocStruct;
-t_free      *freeStruct;
-
+t_malloc            *mallocStruct;
+t_free              *freeStruct;
 pthread_mutex_t     lock_mutex;
 
-#endif /* !MALLOC_H_ */
+void                *malloc(size_t size);
+void                *realloc(void *ptr, size_t size);
+void                *calloc(size_t nmemb, size_t size);
+void	              free(void *);
+void		            show_alloc_mem();
+void                show_free_list();
+size_t	            allow_right(size_t);
+void                *check_in_free_list(size_t size);
+t_malloc            *getNextMalloc(t_free *tmpToMalloc);
+t_free	            *getNextFree(t_free *);
+t_free	            *fracturation(size_t, t_free *);
+void	              removeFree(t_free *);
+void	              addFreeToMalloc(t_free *);
+void	              add_end(t_free*);
+void	              add_middle(t_free *);
+void	              merging_block();
+void                free_malloc_head();
+void	              *push_if_null(size_t, size_t);
+
+#endif              /* !MALLOC_H_ */

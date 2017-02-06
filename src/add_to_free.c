@@ -1,19 +1,19 @@
 /*
 ** add_to_free.c for free in /home/julian_r/rendu/systeme_unix/PSU_2016_malloc
-** 
+**
 ** Made by Juliani Renaud
 ** Login   <julian_r@epitech.net>
-** 
+**
 ** Started on  Mon Feb  6 11:42:28 2017 Juliani Renaud
-** Last update Mon Feb  6 11:58:00 2017 Juliani Renaud
+** Last update	Mon Feb 06 20:47:30 2017 Full Name
 */
 
-#include "malloc.h"
+#include          "malloc.h"
 
 extern	t_malloc	*mallocStruct;
 extern	t_free		*freeStruct;
 
-void			add_middle2(t_free *tmp, t_free *ptr)
+void			        merging_block(t_free *tmp, t_free *ptr)
 {
   ptr->size += tmp->size + sizeof(t_free);
   tmp->prev->next = ptr;
@@ -33,12 +33,13 @@ void			add_middle2(t_free *tmp, t_free *ptr)
   memset(tmp, 0, sizeof(t_free));
 }
 
-void			add_middle(t_free *ptr)
+void              add_middle(t_free *ptr)
 {
-  t_free *tmp;
+  t_free          *tmp;
+
   tmp = getNextFree(ptr);
   if (tmp == (void *) ptr + ptr->size + sizeof(t_free))
-    add_middle2(tmp, ptr);
+    merging_block (tmp, ptr);
   else if (tmp->prev && tmp->prev == (void*) ptr -
 	   (tmp->prev->size + sizeof(t_free)))
     {
@@ -54,7 +55,7 @@ void			add_middle(t_free *ptr)
     }
 }
 
-void			add_end(t_free *ptr)
+void              add_end(t_free *ptr)
 {
   if ((void *) freeStruct->end + freeStruct->end->size
       + sizeof(t_free) == (void *) ptr)
@@ -72,7 +73,7 @@ void			add_end(t_free *ptr)
     }
 }
 
-void			free_extend()
+void              free_malloc_head()
 {
   mallocStruct->next->end = mallocStruct->end;
   mallocStruct = mallocStruct->next;
