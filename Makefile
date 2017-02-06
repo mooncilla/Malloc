@@ -5,40 +5,40 @@
 ## Login   <gastal_r>
 ##
 ## Started on  Fri Jan 27 12:28:44 2017
-## Last update Mon Feb  6 15:24:09 2017
+## Last update Mon Feb  6 22:40:58 2017 
 ##
 
-CC				=       gcc
+CC		=       gcc
 
-RM				=       rm -rf
+RM		=       rm -rf
 
-CFLAGS		+=				-Wall -Wextra -W -Werror -fPIC -lpthread
-CFLAGS		+=				-I./include
-LDFLAGS		+=				-shared
+CFLAGS		+=	-Wall -Wextra -W -Werror -fPIC -lpthread
+CFLAGS		+=	-I./include
+LDFLAGS		+=	-shared
 
-NAME			=				libmy_malloc.so
+NAME		=	libmy_malloc.so
 
-SRCS			=				src/malloc.c \
-									src/utils.c	\
-									src/free.c \
-									src/add_to_free.c \
-									src/push_back_fct.c \
-									src/fct_free.c \
-									src/show_func.c
+SRCS		=	src/malloc.c		\
+			src/utils.c		\
+			src/free.c		\
+			src/add_to_free.c	\
+			src/push_back_fct.c	\
+			src/fct_free.c		\
+			src/show_func.c
 
-OBJS			=				$(SRCS:.c=.o)
+OBJS		=	$(SRCS:.c=.o)
 
-all				:       $(NAME)
+all		:       $(NAME)
 
-$(NAME)		:				$(OBJS)
-									$(CC) -o $(NAME) $(OBJS) $(CFLAGS) $(LDFLAGS)
+$(NAME)		:	$(OBJS)
+			$(CC) -o $(NAME) $(OBJS) $(CFLAGS) $(LDFLAGS)
 
-clean			:
-									$(RM) $(OBJS)
+clean		:
+			$(RM) $(OBJS)
 
 fclean		:       clean
-									$(RM) $(NAME)
+			$(RM) $(NAME)
 
-re				:       clean fclean all
+re		:       fclean all
 
 .PHONNY		:       all clean fclean re
