@@ -61,5 +61,6 @@ void	              add_middle(t_free *);
 void	              merging_block();
 void                free_malloc_head();
 void	              *push_if_null(size_t, size_t);
+void			free_delete_end(t_malloc *);
 
 #endif              /* !MALLOC_H_ */

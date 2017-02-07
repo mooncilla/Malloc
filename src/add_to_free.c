@@ -40,8 +40,8 @@ void			add_middle(t_free *ptr)
   tmp = getNextFree(ptr);
   if (tmp == (void *) ptr + ptr->size + sizeof(t_free))
     merging_block (tmp, ptr);
-  else if (tmp->prev && tmp->prev == (void*) ptr -
-	   (tmp->prev->size + sizeof(t_free)))
+  else if (tmp->prev && tmp->prev == (void*) ptr
+	   - (tmp->prev->size + sizeof(t_free)))
     {
       tmp->prev->size += ptr->size + sizeof(t_free);
       memset(ptr, 0, sizeof(t_free));

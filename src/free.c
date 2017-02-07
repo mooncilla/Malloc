@@ -14,9 +14,9 @@ extern t_malloc   *mallocStruct;
 extern t_free     *freeStruct;
 extern pthread_mutex_t mutex_malloc;
 
-t_free		  *getNextFree(t_free *tmpToMalloc)
+t_free			*getNextFree(t_free *tmpToMalloc)
 {
-  t_free	  *tmp;
+  t_free		*tmp;
 
   tmp = freeStruct->end;
   if (tmp->prev < tmpToMalloc)
@@ -30,9 +30,9 @@ t_free		  *getNextFree(t_free *tmpToMalloc)
   return (tmp->next);
 }
 
-void		   *check_in_free_list(size_t size)
+void			*check_in_free_list(size_t size)
 {
-  t_free	   *tmp;
+  t_free		*tmp;
 
   tmp = freeStruct;
   while (tmp)
@@ -40,7 +40,7 @@ void		   *check_in_free_list(size_t size)
     if (tmp->size >= size)
     {
       if ((int)((int) tmp->size - ((int) size + sizeof(t_free))) >= 4)
-	      fracturation(size, tmp);
+	fracturation(size, tmp);
       removeFree(tmp);
       addFreeToMalloc(tmp);
       return ((void *) tmp + sizeof(t_malloc));
@@ -50,7 +50,7 @@ void		   *check_in_free_list(size_t size)
   return (NULL);
 }
 
-void		      add_to_free_list(t_free *ptr)
+void			add_to_free_list(t_free *ptr)
 {
   if (freeStruct == NULL)
   {
@@ -77,6 +77,20 @@ void		      add_to_free_list(t_free *ptr)
   ptr->flag = FREE_FLAG;
 }
 
+void			free_delete_end(t_malloc *tmp)
+{
+  if (tmp->next == NULL)
+    {
+      mallocStruct->end = mallocStruct->end->prev;
+      mallocStruct->end->next = NULL;
+    }
+  else
+    {
+      tmp->next->prev = tmp->prev;
+      tmp->prev->next = tmp->next;
+    }
+}
+
 void		        free(void *ptr)
 {
   t_malloc		*tmp;
@@ -89,18 +103,7 @@ void		        free(void *ptr)
     }
   tmp = ptr - sizeof(t_malloc);
   if (tmp->prev)
-  {
-    if (tmp->next == NULL)
-    {
-      mallocStruct->end = mallocStruct->end->prev;
-      mallocStruct->end->next = NULL;
-    }
-    else
-    {
-      tmp->next->prev = tmp->prev;
-      tmp->prev->next = tmp->next;
-    }
-  }
+    free_delete_end(tmp);
   else if (mallocStruct->next == NULL)
     mallocStruct = NULL;
   else

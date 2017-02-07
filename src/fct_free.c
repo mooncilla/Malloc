@@ -36,15 +36,15 @@ void			removeFree(t_free *tmpToMalloc)
   if (tmpToMalloc->prev)
     {
       if (tmpToMalloc->next == NULL)
-	     {
-	        freeStruct->end = freeStruct->end->prev;
-	        freeStruct->end->next = NULL;
-	      }
+	{
+	  freeStruct->end = freeStruct->end->prev;
+	  freeStruct->end->next = NULL;
+	}
       else
-	     {
-	        tmpToMalloc->next->prev = tmpToMalloc->prev;
-	        tmpToMalloc->prev->next = tmpToMalloc->next;
-	     }
+	{
+	  tmpToMalloc->next->prev = tmpToMalloc->prev;
+	  tmpToMalloc->prev->next = tmpToMalloc->next;
+	}
     }
   else if (freeStruct->next == NULL)
     freeStruct = NULL;
@@ -91,14 +91,14 @@ void			addFreeToMalloc(t_free *tmpToMalloc)
   else
     {
       if (mallocStruct && mallocStruct->end > (t_malloc *) tmpToMalloc)
-	     addFreeToMalloc2(tmpToMalloc);
+	addFreeToMalloc2(tmpToMalloc);
       else
-	     {
-	        mallocStruct->end->next = (t_malloc *) tmpToMalloc;
-	        mallocStruct->end->next->prev = mallocStruct->end;
-	        mallocStruct->end = (t_malloc *) tmpToMalloc;
-	        mallocStruct->end->next = NULL;
-	     }
+	{
+	  mallocStruct->end->next = (t_malloc *) tmpToMalloc;
+	  mallocStruct->end->next->prev = mallocStruct->end;
+	  mallocStruct->end = (t_malloc *) tmpToMalloc;
+	  mallocStruct->end->next = NULL;
+	}
     }
   tmpToMalloc->flag = MALLOC_FLAG;
 }
