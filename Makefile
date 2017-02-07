@@ -5,7 +5,7 @@
 ## Login   <gastal_r>
 ##
 ## Started on  Fri Jan 27 12:28:44 2017
-## Last update Mon Feb  6 22:40:58 2017 
+## Last update Tue Feb  7 15:02:06 2017 
 ##
 
 CC		=       gcc
@@ -24,6 +24,7 @@ SRCS		=	src/malloc.c		\
 			src/add_to_free.c	\
 			src/push_back_fct.c	\
 			src/fct_free.c		\
+			src/realloc.c		\
 			src/show_func.c
 
 OBJS		=	$(SRCS:.c=.o)

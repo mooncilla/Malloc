@@ -5,7 +5,7 @@
 ** Login   <julian_r@epitech.net>
 **
 ** Started on  Mon Feb  6 11:58:49 2017 Juliani Renaud
-** Last update	Mon Feb 06 23:31:09 2017 Full Name
+** Last update	Tue Feb 07 15:03:06 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -37,13 +37,4 @@ size_t		allow_right(size_t      needed)
   while (right <= (needed + sizeof(t_malloc)))
     right += PAGESIZE;
   return (right);
-}
-
-void		*calloc(size_t nmemb, size_t size)
-{
-  void		*ptr;
-
-  ptr = malloc(nmemb * size);
-  ptr = memset(ptr, 0, nmemb * size);
-  return (ptr);
 }

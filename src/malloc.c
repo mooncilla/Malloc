@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Tue Feb 07 13:47:13 2017 Full Name
+** Last update	Tue Feb 07 15:01:19 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -61,29 +61,15 @@ void		*push_back_malloc_list(size_t size, size_t currentPageSize)
     }
 }
 
-void		*malloc(size_t size)
+void		*allow_memory(size_t size)
 {
   static size_t pagerUsedSize;
   static size_t currentPageSize;
-  void		*ptrTestFree;
 
-  lock_mutex_init();
-  pthread_mutex_lock(&mutex_malloc);
-  if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
-  {
-    pthread_mutex_unlock(&mutex_malloc);
-    return (NULL);
-  }
-  (size <= 0 ? size = 8 : size);
   if (mallocStruct == NULL)
   {
     pagerUsedSize = allow_right(size);
     currentPageSize = allow_right(size);
-  }
-  if ((ptrTestFree = check_in_free_list(size)) != NULL)
-  {
-    pthread_mutex_unlock(&mutex_malloc);
-    return (ptrTestFree);
   }
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
@@ -100,25 +86,22 @@ void		*malloc(size_t size)
   }
 }
 
-void		*realloc(void *ptr, size_t size)
+void		*malloc(size_t size)
 {
-  void		*tmp;
-  t_malloc	*ptrStruct;
+  void		*ptrTestFree;
 
-  if (ptr == NULL)
-    return (malloc(size));
-  if (size == 0)
+  lock_mutex_init();
+  pthread_mutex_lock(&mutex_malloc);
+  if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
   {
-    free(ptr);
+    pthread_mutex_unlock(&mutex_malloc);
     return (NULL);
   }
-  if ((tmp = check_in_free_list(size)) == NULL)
-    tmp = malloc(size);
-  ptrStruct = ptr - sizeof(t_malloc);
-  if (ptrStruct->size < size)
-    tmp = memcpy(tmp, ptr, ptrStruct->size);
-  else
-    tmp = memcpy(tmp, ptr, size);
-  free(ptr);
-  return (tmp);
+  (size == 0 ? size = 8 : size);
+  if ((ptrTestFree = check_in_free_list(size)) != NULL)
+  {
+    pthread_mutex_unlock(&mutex_malloc);
+    return (ptrTestFree);
+  }
+  return (allow_memory(size));
 }
