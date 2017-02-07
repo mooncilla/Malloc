@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:52:14 2017
-** Last update	Mon Feb 06 16:12:35 2017 Full Name
+** Last update	Tue Feb 07 13:37:30 2017 Full Name
 */
 
 #ifndef		      UTILS_H_
@@ -15,7 +15,7 @@
 
 int             my_strlen(char *str);
 void            my_putstr(char *str);
-void            my_putnbr(int nb);
+void            my_putnbr_unsigned(size_t nb);
 void            print_pointer(void *nbs);
 
 #endif

@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Mon Feb  6 18:47:14 2017
-** Last update	Mon Feb 06 19:14:06 2017 Full Name
+** Last update	Tue Feb 07 13:38:57 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -27,7 +27,7 @@ void		show_alloc_mem()
     my_putstr(" - ");
     print_pointer((void *) tmp  + sizeof(t_malloc) + tmp->size);
     my_putstr(" : ");
-    my_putnbr(tmp->size);
+    my_putnbr_unsigned(tmp->size);
     my_putstr(" bytes\n");
     tmp = tmp->next;
   }
@@ -46,7 +46,7 @@ void		show_free_list()
     my_putstr(" - ");
     print_pointer((void *) tmp  + sizeof(t_free) + tmp->size);
     my_putstr(" : ");
-    my_putnbr(tmp->size);
+    my_putnbr_unsigned(tmp->size);
     my_putstr(" bytes\n");
     tmp = tmp->next;
   }

@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Mon Feb 06 23:37:47 2017 Full Name
+** Last update	Tue Feb 07 13:47:13 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -69,7 +69,12 @@ void		*malloc(size_t size)
 
   lock_mutex_init();
   pthread_mutex_lock(&mutex_malloc);
-  (size == 0 ? size = 8 : size);
+  if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
+  {
+    pthread_mutex_unlock(&mutex_malloc);
+    return (NULL);
+  }
+  (size <= 0 ? size = 8 : size);
   if (mallocStruct == NULL)
   {
     pagerUsedSize = allow_right(size);

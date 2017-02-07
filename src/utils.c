@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:19:22 2017
-** Last update	Mon Feb 06 16:25:49 2017 Full Name
+** Last update	Tue Feb 07 13:37:19 2017 Full Name
 */
 
 #include        "utils.h"
@@ -29,28 +29,23 @@ void		print_pointer(void *nbs)
   while (div > 0)
     {
       result = (nb / div) % length;
-      write (2, &base[result], 1);
+      write (1, &base[result], 1);
       div = div / length;
     }
 }
 
-void		my_putnbr(int nb)
+void		my_putnbr_unsigned(size_t nb)
 {
-  int		i;
-  int		x;
+  size_t		i;
+  size_t		x;
 
   i = 1;
-  if (nb < 0)
-    {
-      nb = nb * -1;
-      write(2, "-", 1);
-    }
   while ((nb / i) >= 10)
     i = i * 10;
   while (i != 0)
     {
       x = ((nb / i) % 10) + 48;
-      write(2, &x, 1);
+      write(1, &x, 1);
       i = i / 10;
     }
 }
@@ -66,5 +61,5 @@ int		my_strlen(char *str)
 
 void		my_putstr(char *str)
 {
-  write (2, str, my_strlen(str));
+  write (1, str, my_strlen(str));
 }
