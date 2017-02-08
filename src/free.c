@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Mon Feb 06 23:37:41 2017 Full Name
+** Last update	Wed Feb 08 13:10:34 2017 Full Name
 */
 
 #include          "malloc.h"
@@ -96,7 +96,7 @@ void		        free(void *ptr)
   t_malloc		*tmp;
 
   pthread_mutex_lock(&mutex_malloc);
-  if (ptr == NULL)
+  if (ptr == NULL || ((t_malloc*)(ptr - sizeof(t_malloc)))->flag == FREE_FLAG)
     {
       pthread_mutex_unlock(&mutex_malloc);
       return ;
