@@ -16,6 +16,12 @@
 
 #include            "utils.h"
 
+#if                 __x86_64__
+#define             ALLIGN 8
+#else
+#define             ALLIGN 4
+#endif
+
 #define             PAGESIZE sysconf  (_SC_PAGESIZE)
 #define             MALLOC_FLAG       'M'
 #define             FREE_FLAG         'F'
@@ -61,6 +67,7 @@ void	              add_middle(t_free *);
 void	              merging_block();
 void                free_malloc_head();
 void	              *push_if_null(size_t, size_t);
-void			free_delete_end(t_malloc *);
+void			          free_delete_end(t_malloc *);
+int                 get_multiple(int nb);
 
 #endif              /* !MALLOC_H_ */

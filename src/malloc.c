@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Tue Feb 07 15:01:19 2017 Full Name
+** Last update	Thu Feb 09 18:28:17 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -92,12 +92,12 @@ void		*malloc(size_t size)
 
   lock_mutex_init();
   pthread_mutex_lock(&mutex_malloc);
+  size = get_multiple(size);
   if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
   {
     pthread_mutex_unlock(&mutex_malloc);
     return (NULL);
   }
-  (size == 0 ? size = 8 : size);
   if ((ptrTestFree = check_in_free_list(size)) != NULL)
   {
     pthread_mutex_unlock(&mutex_malloc);

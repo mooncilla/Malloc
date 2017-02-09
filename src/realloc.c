@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Feb  7 15:00:57 2017
-** Last update	Tue Feb 07 15:03:25 2017 Full Name
+** Last update	Thu Feb 09 18:21:54 2017 Full Name
 */
 
 #include	"malloc.h"
@@ -15,6 +15,7 @@ void		*realloc(void *ptr, size_t size)
   void		*tmp;
   t_malloc	*ptrStruct;
 
+  size = get_multiple(size);
   if (ptr == NULL)
     return (malloc(size));
   if (size == 0)
@@ -37,6 +38,7 @@ void		*calloc(size_t nmemb, size_t size)
 {
   void		*ptr;
 
+  size = get_multiple(size);
   ptr = malloc(nmemb * size);
   ptr = memset(ptr, 0, nmemb * size);
   return (ptr);
