@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Fri Feb 10 01:42:14 2017 Full Name
+** Last update	Mon Feb 06 23:34:40 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -30,6 +30,7 @@ typedef struct      s_malloc
 {
   struct s_malloc   *next;
   struct s_malloc   *prev;
+  struct s_malloc   *end;
   size_t            size;
   char              flag;
 }                   t_malloc;
@@ -38,19 +39,13 @@ typedef struct      s_free
 {
   struct s_free     *next;
   struct s_free     *prev;
+  struct s_free     *end;
   size_t            size;
   char              flag;
 }                   t_free;
 
-typedef struct      s_core
-{
-  struct s_malloc   *mEnd;
-  struct s_free     *fEnd;
-  struct s_malloc   *mList;
-  struct s_free     *fList;
-}                   t_core;
-
-t_core              *coreStruct;
+t_malloc            *mallocStruct;
+t_free              *freeStruct;
 
 pthread_mutex_t     mutex_malloc;
 

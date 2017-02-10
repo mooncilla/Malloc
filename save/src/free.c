@@ -5,19 +5,20 @@
 ** Login   <gastal_r>
 **
 ** Started on  Sat Feb  4 02:37:06 2017
-** Last update	Fri Feb 10 01:31:29 2017 Full Name
+** Last update	Wed Feb 08 13:10:34 2017 Full Name
 */
 
 #include          "malloc.h"
 
-extern t_core   *coreStruct;
+extern t_malloc   *mallocStruct;
+extern t_free     *freeStruct;
 extern pthread_mutex_t mutex_malloc;
 
 t_free			*getNextFree(t_free *tmpToMalloc)
 {
   t_free		*tmp;
 
-  tmp = coreStruct->fEnd;
+  tmp = freeStruct->end;
   if (tmp->prev < tmpToMalloc)
     return (tmp);
   while (tmp > (t_free *) tmpToMalloc)
@@ -33,13 +34,13 @@ void			*check_in_free_list(size_t size)
 {
   t_free		*tmp;
 
-  tmp = coreStruct->fList;
+  tmp = freeStruct;
   while (tmp)
   {
     if (tmp->size >= size)
     {
-      if ((int)((int) tmp->size - ((int) size + sizeof(t_free))) >= ALLIGN)
-	     fracturation(size, tmp);
+      if ((int)((int) tmp->size - ((int) size + sizeof(t_free))) >= 4)
+	fracturation(size, tmp);
       removeFree(tmp);
       addFreeToMalloc(tmp);
       return ((void *) tmp + sizeof(t_malloc));
@@ -51,25 +52,26 @@ void			*check_in_free_list(size_t size)
 
 void			add_to_free_list(t_free *ptr)
 {
-  if (coreStruct->fList == NULL)
+  if (freeStruct == NULL)
   {
-    coreStruct->fList = ptr;
-    coreStruct->fEnd = coreStruct->fList;
-    coreStruct->fList->next = NULL;
-    coreStruct->fList->prev = NULL;
+    freeStruct = ptr;
+    freeStruct->end = freeStruct;
+    freeStruct->next = NULL;
+    freeStruct->prev = NULL;
   }
   else
   {
-    if (ptr < coreStruct->fEnd && ptr > coreStruct->fList)
+    if (ptr < freeStruct->end && ptr > freeStruct)
       add_middle(ptr);
-    else if (ptr > coreStruct->fEnd)
+    else if (ptr > freeStruct->end)
       add_end(ptr);
     else
     {
+      ptr->end = freeStruct->end;
       ptr->prev = NULL;
-      ptr->next = coreStruct->fList;
-      coreStruct->fList->prev = ptr;
-      coreStruct->fList = ptr;
+      ptr->next = freeStruct;
+      freeStruct->prev = ptr;
+      freeStruct = ptr;
     }
   }
   ptr->flag = FREE_FLAG;
@@ -79,8 +81,8 @@ void			free_delete_end(t_malloc *tmp)
 {
   if (tmp->next == NULL)
     {
-      coreStruct->mEnd = coreStruct->mEnd->prev;
-      coreStruct->mEnd->next = NULL;
+      mallocStruct->end = mallocStruct->end->prev;
+      mallocStruct->end->next = NULL;
     }
   else
     {
@@ -102,8 +104,8 @@ void		        free(void *ptr)
   tmp = ptr - sizeof(t_malloc);
   if (tmp->prev)
     free_delete_end(tmp);
-  else if (coreStruct->mList->next == NULL)
-    coreStruct->mList = NULL;
+  else if (mallocStruct->next == NULL)
+    mallocStruct = NULL;
   else
     free_malloc_head();
   add_to_free_list((t_free *) tmp);

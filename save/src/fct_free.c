@@ -5,12 +5,13 @@
 ** Login   <julian_r@epitech.net>
 **
 ** Started on  Mon Feb  6 10:58:07 2017 Juliani Renaud
-** Last update	Fri Feb 10 01:43:21 2017 Full Name
+** Last update	Mon Feb 06 19:18:52 2017 Full Name
 */
 
 #include          "malloc.h"
 
-extern t_core   *coreStruct;
+extern	t_malloc	*mallocStruct;
+extern	t_free		*freeStruct;
 
 t_free		        *fracturation(size_t size, t_free *tmpToMalloc)
 {
@@ -24,7 +25,7 @@ t_free		        *fracturation(size_t size, t_free *tmpToMalloc)
   if (tmpToMalloc->next)
     tmpToMalloc->next->prev = tmpNext;
   else
-    coreStruct->fEnd = tmpNext;
+    freeStruct->end = tmpNext;
   tmpToMalloc->next = tmpNext;
   tmpNext->flag = FREE_FLAG;
   return (tmpNext);
@@ -36,8 +37,8 @@ void			removeFree(t_free *tmpToMalloc)
     {
       if (tmpToMalloc->next == NULL)
 	{
-	  coreStruct->fEnd = coreStruct->fEnd->prev;
-	  coreStruct->fEnd->next = NULL;
+	  freeStruct->end = freeStruct->end->prev;
+	  freeStruct->end->next = NULL;
 	}
       else
 	{
@@ -45,12 +46,13 @@ void			removeFree(t_free *tmpToMalloc)
 	  tmpToMalloc->prev->next = tmpToMalloc->next;
 	}
     }
-  else if (coreStruct->fList->next == NULL)
-    coreStruct->fList = NULL;
+  else if (freeStruct->next == NULL)
+    freeStruct = NULL;
   else
     {
-      coreStruct->fList = coreStruct->fList->next;
-      coreStruct->fList->prev = NULL;
+      freeStruct->next->end = freeStruct->end;
+      freeStruct = freeStruct->next;
+      freeStruct->prev = NULL;
     }
   return ;
 }
@@ -63,9 +65,10 @@ void			addFreeToMalloc2(t_free *tmpToMalloc)
   if (ptrNextMalloc->prev == NULL)
     {
       ptrNextMalloc->prev = (t_malloc *) tmpToMalloc;
-      coreStruct->mList = (t_malloc *) tmpToMalloc;
-      coreStruct->mList->next = ptrNextMalloc;
-      coreStruct->mList->prev = NULL;
+      mallocStruct = (t_malloc *) tmpToMalloc;
+      mallocStruct->next = ptrNextMalloc;
+      mallocStruct->end = ptrNextMalloc->end;
+      mallocStruct->prev = NULL;
     }
   else
     {
@@ -78,23 +81,23 @@ void			addFreeToMalloc2(t_free *tmpToMalloc)
 
 void			addFreeToMalloc(t_free *tmpToMalloc)
 {
-  if (coreStruct->mList == NULL)
+  if (mallocStruct == NULL)
     {
-      coreStruct->mList = (t_malloc *) tmpToMalloc;
-      coreStruct->mEnd = coreStruct->mList;
-      coreStruct->mList->next = NULL;
-      coreStruct->mList->prev = NULL;
+      mallocStruct = (t_malloc *) tmpToMalloc;
+      mallocStruct->end = mallocStruct;
+      mallocStruct->next = NULL;
+      mallocStruct->prev = NULL;
     }
   else
     {
-      if (coreStruct->mList && coreStruct->mEnd > (t_malloc *) tmpToMalloc)
+      if (mallocStruct && mallocStruct->end > (t_malloc *) tmpToMalloc)
 	addFreeToMalloc2(tmpToMalloc);
       else
 	{
-	  coreStruct->mEnd->next = (t_malloc *) tmpToMalloc;
-	  coreStruct->mEnd->next->prev = coreStruct->mEnd;
-	  coreStruct->mEnd = (t_malloc *) tmpToMalloc;
-	  coreStruct->mEnd->next = NULL;
+	  mallocStruct->end->next = (t_malloc *) tmpToMalloc;
+	  mallocStruct->end->next->prev = mallocStruct->end;
+	  mallocStruct->end = (t_malloc *) tmpToMalloc;
+	  mallocStruct->end->next = NULL;
 	}
     }
   tmpToMalloc->flag = MALLOC_FLAG;

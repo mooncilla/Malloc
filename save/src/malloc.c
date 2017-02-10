@@ -5,12 +5,13 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 10 01:44:37 2017 Full Name
+** Last update	Thu Feb 09 18:28:17 2017 Full Name
 */
 
 #include        "malloc.h"
 
-extern t_core *coreStruct;
+extern t_malloc *mallocStruct;
+extern t_free   *freeStruct;
 extern pthread_mutex_t mutex_malloc;
 
 void		lock_mutex_init()
@@ -38,19 +39,19 @@ void		*push_back_malloc_list(size_t size, size_t currentPageSize)
 {
     t_malloc	*tmp;
 
-    if (coreStruct->mList == NULL)
+    if (mallocStruct == NULL)
     {
       return (push_if_null(size, currentPageSize));
     }
     else
     {
-      tmp = coreStruct->mEnd;
-      if (coreStruct->fList && coreStruct->fEnd > (t_free *) coreStruct->mEnd)
-        tmp->next = (void *) coreStruct->fEnd
-        + coreStruct->fEnd->size + sizeof(t_free);
+      tmp = mallocStruct->end;
+      if (freeStruct && freeStruct->end > (t_free *) mallocStruct->end)
+        tmp->next = (void *) freeStruct->end
+        + freeStruct->end->size + sizeof(t_free);
       else
         tmp->next = (void *) tmp + tmp->size + sizeof(t_malloc);
-      coreStruct->mEnd = tmp->next;
+      mallocStruct->end = tmp->next;
       tmp->next->size = size;
       tmp->next->next = NULL;
       tmp->next->prev = tmp;
@@ -65,12 +66,10 @@ void		*allow_memory(size_t size)
   static size_t pagerUsedSize;
   static size_t currentPageSize;
 
-  if (coreStruct == NULL)
+  if (mallocStruct == NULL)
   {
-    coreStruct = sbrk(allow_right(size + sizeof(t_core)));
-    currentPageSize = allow_right(size + sizeof(t_core));
-    pagerUsedSize = size + sizeof(t_malloc) + sizeof(t_core);
-    return (push_back_malloc_list(size, currentPageSize));
+    pagerUsedSize = allow_right(size);
+    currentPageSize = allow_right(size);
   }
   if ((currentPageSize - pagerUsedSize) < (size + sizeof(t_malloc)))
   {
@@ -99,7 +98,7 @@ void		*malloc(size_t size)
     pthread_mutex_unlock(&mutex_malloc);
     return (NULL);
   }
-  if (coreStruct && (ptrTestFree = check_in_free_list(size)) != NULL)
+  if ((ptrTestFree = check_in_free_list(size)) != NULL)
   {
     pthread_mutex_unlock(&mutex_malloc);
     return (ptrTestFree);

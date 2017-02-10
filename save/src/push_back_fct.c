@@ -5,28 +5,28 @@
 ** Login   <julian_r@epitech.net>
 **
 ** Started on  Mon Feb  6 11:58:49 2017 Juliani Renaud
-** Last update	Fri Feb 10 01:22:09 2017 Full Name
+** Last update	Thu Feb 09 18:28:25 2017 Full Name
 */
 
 #include        "malloc.h"
 
-extern t_core   *coreStruct;
-extern pthread_mutex_t mutex_malloc;
+extern t_malloc	*mallocStruct;
+extern t_free	*freeStruct;
 
 void		*push_if_null(size_t size, size_t currentPageSize)
 {
-  if (coreStruct->fList)
-    coreStruct->mList = (void *) coreStruct->fEnd
-      + coreStruct->fEnd->size + sizeof(t_free);
+  if (freeStruct)
+    mallocStruct = (void *) freeStruct->end
+      + freeStruct->end->size + sizeof(t_free);
   else
-    coreStruct->mList = sbrk(0) - (currentPageSize - sizeof(t_core));
-  coreStruct->mList->size = size;
-  coreStruct->mEnd = coreStruct->mList;
-  coreStruct->mList->next = NULL;
-  coreStruct->mList->prev = NULL;
-  coreStruct->mList->flag = MALLOC_FLAG;
+    mallocStruct = sbrk(0) - currentPageSize;
+  mallocStruct->size = size;
+  mallocStruct->end = mallocStruct;
+  mallocStruct->next = NULL;
+  mallocStruct->prev = NULL;
+  mallocStruct->flag = MALLOC_FLAG;
   pthread_mutex_unlock(&mutex_malloc);
-  return ((void *) coreStruct->mList + sizeof(t_malloc));
+  return ((void *) mallocStruct + sizeof(t_malloc));
 }
 
 int       get_multiple(int nb)

@@ -5,23 +5,22 @@
 ** Login   <gastal_r>
 **
 ** Started on  Mon Feb  6 18:47:14 2017
-** Last update	Fri Feb 10 01:24:08 2017 Full Name
+** Last update	Tue Feb 07 13:38:57 2017 Full Name
 */
 
 #include        "malloc.h"
 
-extern t_core   *coreStruct;
+extern t_malloc	*mallocStruct;
+extern t_free	*freeStruct;
 
 void		show_alloc_mem()
 {
   t_malloc	*tmp;
 
+  tmp = mallocStruct;
   my_putstr("break : ");
   print_pointer(sbrk(0));
   my_putstr("\n");
-  if (coreStruct == NULL)
-    return;
-  tmp = coreStruct->mList;
   while (tmp)
   {
     print_pointer((void *) tmp  + sizeof(t_malloc));
@@ -38,11 +37,9 @@ void		show_free_list()
 {
   t_free	*tmp;
 
+  tmp = freeStruct;
   my_putstr("freeList : ");
   my_putstr("\n");
-  if (coreStruct == NULL)
-    return;
-  tmp = coreStruct->fList;
   while (tmp)
   {
     print_pointer((void *) tmp  + sizeof(t_free));

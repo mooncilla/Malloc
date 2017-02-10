@@ -5,12 +5,13 @@
 ** Login   <julian_r@epitech.net>
 **
 ** Started on  Mon Feb  6 11:42:28 2017 Juliani Renaud
-** Last update	Fri Feb 10 01:42:59 2017 Full Name
+** Last update	Mon Feb 06 20:47:30 2017 Full Name
 */
 
 #include          "malloc.h"
 
-extern t_core   *coreStruct;
+extern	t_malloc	*mallocStruct;
+extern	t_free		*freeStruct;
 
 void			merging_block(t_free *tmp, t_free *ptr)
 {
@@ -21,13 +22,13 @@ void			merging_block(t_free *tmp, t_free *ptr)
   if (tmp->next)
     tmp->next->prev = ptr;
   else
-    coreStruct->fEnd = ptr;
+    freeStruct->end = ptr;
   if (ptr->prev == (void*) ptr - (ptr->prev->size + sizeof(t_free)))
     {
       ptr->prev->size += ptr->size + sizeof(t_free);
       ptr->prev->next = ptr->next;
       (ptr->next ? ptr->next->prev = ptr->prev :
-       (coreStruct->fEnd = ptr->prev));
+       (freeStruct->end = ptr->prev));
     }
   memset(tmp, 0, sizeof(t_free));
 }
@@ -56,24 +57,25 @@ void			add_middle(t_free *ptr)
 
 void			add_end(t_free *ptr)
 {
-  if ((void *) coreStruct->fEnd + coreStruct->fEnd->size
+  if ((void *) freeStruct->end + freeStruct->end->size
       + sizeof(t_free) == (void *) ptr)
     {
-      coreStruct->fEnd->size += ptr->size + sizeof(t_malloc);
+      freeStruct->end->size += ptr->size + sizeof(t_malloc);
       ptr->prev = NULL;
       ptr->next = NULL;
     }
   else
     {
-      coreStruct->fEnd->next = ptr;
-      coreStruct->fEnd->next->prev = coreStruct->fEnd;
-      coreStruct->fEnd = ptr;
-      coreStruct->fEnd->next = NULL;
+      freeStruct->end->next = ptr;
+      freeStruct->end->next->prev = freeStruct->end;
+      freeStruct->end = ptr;
+      freeStruct->end->next = NULL;
     }
 }
 
 void			free_malloc_head()
 {
-  coreStruct->mList = coreStruct->mList->next;
-  coreStruct->mList->prev = NULL;
+  mallocStruct->next->end = mallocStruct->end;
+  mallocStruct = mallocStruct->next;
+  mallocStruct->prev = NULL;
 }
