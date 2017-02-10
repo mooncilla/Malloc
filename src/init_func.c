@@ -5,7 +5,7 @@
 ** Login   <julian_r@epitech.net>
 **
 ** Started on  Mon Feb  6 11:58:49 2017 Juliani Renaud
-** Last update	Fri Feb 10 01:22:09 2017 Full Name
+** Last update	Fri Feb 10 23:53:56 2017 Full Name
 */
 
 #include        "malloc.h"
@@ -13,7 +13,18 @@
 extern t_core   *coreStruct;
 extern pthread_mutex_t mutex_malloc;
 
-void		*push_if_null(size_t size, size_t currentPageSize)
+void		init_mutex()
+{
+  static int	init = 0;
+
+  if (init == 0)
+  {
+    mutex_malloc = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    init = 1;
+  }
+}
+
+void		*init_malloc_head(size_t size, size_t currentPageSize)
 {
   if (coreStruct->fList)
     coreStruct->mList = (void *) coreStruct->fEnd
@@ -33,18 +44,13 @@ int       get_multiple(int nb)
 {
   int value;
 
-  value = nb % ALLIGN;
+  value = nb % ALIGN;
   if (value == 0)
     return nb;
-  return (nb + ALLIGN - value);
+  return (nb + ALIGN - value);
 }
 
 size_t		allow_right(size_t      needed)
 {
-  size_t	right;
-
-  right = PAGESIZE * 2;
-  while (right <= (needed + sizeof(t_malloc)))
-    right += PAGESIZE;
-  return (right);
+  return (((needed / PAGESIZE) + 1) * PAGESIZE);
 }

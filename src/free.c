@@ -38,7 +38,7 @@ void			*check_in_free_list(size_t size)
   {
     if (tmp->size >= size)
     {
-      if ((int)((int) tmp->size - ((int) size + sizeof(t_free))) >= ALLIGN)
+      if ((int)((int) tmp->size - ((int) size + sizeof(t_free))) >= ALIGN)
 	     fracturation(size, tmp);
       removeFree(tmp);
       addFreeToMalloc(tmp);

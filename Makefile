@@ -5,7 +5,7 @@
 ## Login   <gastal_r>
 ##
 ## Started on  Fri Jan 27 12:28:44 2017
-## Last update Fri Feb 10 02:48:59 2017 
+## Last update Fri Feb 10 23:56:59 2017 
 ##
 
 CC		=       gcc
@@ -22,7 +22,7 @@ SRCS		=	src/malloc.c		\
 			src/utils.c		\
 			src/free.c		\
 			src/add_to_free.c	\
-			src/push_back_fct.c	\
+			src/init_func.c		\
 			src/fct_free.c		\
 			src/realloc.c		\
 			src/show_func.c

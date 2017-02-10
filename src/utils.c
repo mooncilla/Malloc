@@ -5,32 +5,27 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Jan 24 14:19:22 2017
-** Last update	Tue Feb 07 13:37:19 2017 Full Name
+** Last update	Fri Feb 10 23:19:09 2017 Full Name
 */
 
 #include        "utils.h"
 
 void		print_pointer(void *nbs)
 {
-  size_t	result;
   size_t	div;
-  size_t	length;
   size_t	nb;
   char		*base;
 
   nb = (size_t)nbs;
   base = "0123456789ABCDEF";
-  result = 0;
   div = 1;
-  length = 16;
   my_putstr("0x");
-  while ((nb / div) >= length)
-    div = div * length;
+  while ((nb / div) >= 16)
+    div = div * 16;
   while (div > 0)
     {
-      result = (nb / div) % length;
-      write (1, &base[result], 1);
-      div = div / length;
+      write (1, &base[(nb / div) % 16], 1);
+      div = div / 16;
     }
 }
 

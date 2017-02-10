@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Wed Jan 25 18:35:39 2017
-** Last update	Fri Feb 10 02:53:58 2017 Full Name
+** Last update	Fri Feb 10 23:45:59 2017 Full Name
 */
 
 #ifndef             MALLOC_H_
@@ -17,9 +17,9 @@
 #include            "utils.h"
 
 #if                 __x86_64__
-#define             ALLIGN 8
+#define             ALIGN 8
 #else
-#define             ALLIGN 4
+#define             ALIGN 4
 #endif
 
 #define             PAGESIZE sysconf  (_SC_PAGESIZE)
@@ -71,8 +71,9 @@ void	              add_end(t_free*);
 void	              add_middle(t_free *);
 void	              merging_block();
 void                free_malloc_head();
-void	              *push_if_null(size_t, size_t);
+void	              *init_malloc_head(size_t, size_t);
 void			          free_delete_end(t_malloc *);
 int                 get_multiple(int nb);
+void	              init_mutex();
 
 #endif              /* !MALLOC_H_ */

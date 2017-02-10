@@ -5,24 +5,13 @@
 ** Login   <gastal_r>
 **
 ** Started on  Fri Jan 27 12:45:07 2017
-** Last update	Fri Feb 10 01:44:37 2017 Full Name
+** Last update	Fri Feb 10 23:47:02 2017 Full Name
 */
 
 #include        "malloc.h"
 
 extern t_core *coreStruct;
 extern pthread_mutex_t mutex_malloc;
-
-void		lock_mutex_init()
-{
-  static int	init = 0;
-
-  if (init == 0)
-  {
-    mutex_malloc = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
-    init = 1;
-  }
-}
 
 t_malloc	*getNextMalloc(t_free *tmpToMalloc)
 {
@@ -39,9 +28,7 @@ void		*push_back_malloc_list(size_t size, size_t currentPageSize)
     t_malloc	*tmp;
 
     if (coreStruct->mList == NULL)
-    {
-      return (push_if_null(size, currentPageSize));
-    }
+      return (init_malloc_head(size, currentPageSize));
     else
     {
       tmp = coreStruct->mEnd;
@@ -91,7 +78,7 @@ void		*malloc(size_t size)
 {
   void		*ptrTestFree;
 
-  lock_mutex_init();
+  init_mutex();
   pthread_mutex_lock(&mutex_malloc);
   size = get_multiple(size);
   if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
