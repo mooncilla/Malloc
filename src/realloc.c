@@ -5,7 +5,7 @@
 ** Login   <gastal_r>
 **
 ** Started on  Tue Feb  7 15:00:57 2017
-** Last update	Thu Feb 09 18:21:54 2017 Full Name
+** Last update	Sat Feb 11 12:33:45 2017 Full Name
 */
 
 #include	"malloc.h"
@@ -16,6 +16,8 @@ void		*realloc(void *ptr, size_t size)
   t_malloc	*ptrStruct;
 
   size = get_multiple(size);
+  if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
+    return (NULL);
   if (ptr == NULL)
     return (malloc(size));
   if (size == 0)
@@ -39,6 +41,8 @@ void		*calloc(size_t nmemb, size_t size)
   void		*ptr;
 
   size = get_multiple(size);
+  if (size > (size_t) sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGE_SIZE))
+    return (NULL);
   ptr = malloc(nmemb * size);
   ptr = memset(ptr, 0, nmemb * size);
   return (ptr);
