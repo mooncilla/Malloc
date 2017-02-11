@@ -5,14 +5,14 @@
 ## Login   <gastal_r>
 ##
 ## Started on  Fri Jan 27 12:28:44 2017
-## Last update Fri Feb 10 23:56:59 2017 
+## Last update Sat Feb 11 14:27:40 2017 
 ##
 
 CC		=       gcc
 
 RM		=       rm -rf
 
-CFLAGS		+=	-Wall -Wextra -W -Werror -fPIC -lpthread
+CFLAGS		+=	-Wall -Wextra -W -Werror -fPIC
 CFLAGS		+=	-I./include
 LDFLAGS		+=	-shared
 
