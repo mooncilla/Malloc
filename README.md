@@ -1,4 +1,4 @@
-## EPITECH- Malloc
+## EPITECH - Malloc
 
 Own implementation of malloc function with performance in mind
 
